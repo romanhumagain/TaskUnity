@@ -3,13 +3,14 @@ import { CiViewList } from "react-icons/ci";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { MdOutlinePending } from "react-icons/md";
 import { GoTasklist } from "react-icons/go";
-import { GrNotes } from "react-icons/gr";
 import { IoMdAdd } from "react-icons/io";
 import { BsPersonWorkspace } from "react-icons/bs";
 import { CgDetailsMore } from "react-icons/cg";
 import { RiMenu4Fill } from "react-icons/ri";
 import { MdSunny } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
+import { MdOutlineDashboardCustomize } from "react-icons/md";
+import { GrDocumentMissing } from "react-icons/gr";
 
 const Sidebar = () => {
   const [mode, setMode] = useState("dark")
@@ -65,7 +66,7 @@ const Sidebar = () => {
           </div>
         </div>
         <div className="px-5 mt-5 mb-6">
-        <p className="font-semibold text-md text-gray-900 dark:text-neutral-300 flex items-center gap-1"><CiViewList />Dashboard</p>
+        <p className="font-semibold text-md text-gray-900 dark:text-neutral-300 flex items-center gap-1"><MdOutlineDashboardCustomize />Dashboard</p>
         </div>
 
         
@@ -79,9 +80,9 @@ const Sidebar = () => {
               <p className="text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1"><GoTasklist />All Task</p>
               <p className="text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1"><MdOutlineTaskAlt />Completed</p>
               <p className="text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1"><MdOutlinePending />Pending</p>
-            </div>
+              <p className="text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1"><GrDocumentMissing className="text-sm" />Overdue</p>
 
-            <p className="font-semibold text-md text-gray-900 dark:text-neutral-300 mt-5 flex items-center gap-1"><GrNotes />Notes</p>
+            </div>
 
 
 

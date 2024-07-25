@@ -16,13 +16,13 @@ const Task = () => {
           <div className="mt-5">
             <p className="font-semibold text-gray-900 dark:text-neutral-200 text-[18px]">Learning MERN stack</p>
             <p className="text-gray-700 dark:text-neutral-400 text-sm mt-2">Learning Backend from the youtube tutorial. Especially focusing on Node and Express with Mongo DB</p>
-            <p className="text-gray-500 dark:text-neutral-500 mt-3">29/03/2003</p>
+            <p className="text-gray-500 dark:text-neutral-500 mt-3 text-[14px]">Due:- 29/03/2003</p>
           </div>
           <div className="mt-4 flex justify-between">
-            <p className="bg-rose-600 p-1 px-3 inline rounded-2xl font-semibold text-white cursor-pointer">Incomplete</p>
+            <p className="p-1 bg-teal-600 px-3 inline rounded-2xl font-semibold text-white cursor-pointer transition-transform hover:scale-105 duration-700">Incomplete</p>
             <div className="flex gap-3 items-center">
-              <MdEditSquare className="text-neutral-800 dark:text-gray-200 text-2xl cursor-pointer" />
-              <MdDelete className="text-neutral-800 dark:text-gray-200 text-2xl cursor-pointer" />
+              <MdEditSquare className="text-neutral-800 dark:text-gray-200 text-2xl cursor-pointer transition-transform hover:scale-110 duration-700" />
+              <MdDelete className="text-neutral-800 dark:text-gray-200 text-2xl cursor-pointer transition-transform hover:scale-110 duration-700" />
             </div>
           </div>
         </div>

@@ -6,7 +6,9 @@ import Home from "./pages/Home"
 
 function App() {
 
-  const user = null
+  const user = {
+    
+  }
 
   return (
     <>

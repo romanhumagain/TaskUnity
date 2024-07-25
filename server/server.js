@@ -13,6 +13,7 @@ app.use(express.json());
 
 // Creating Routes
 app.use('/api', require('./src/routes/userRoutes'));
+app.use('/api/tasks', require('./src/routes/taskRoutes'));
 
 app.listen(PORT, ()=>{
   console.log(`Server is running on port ${PORT}`);
