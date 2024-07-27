@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Task from "../components/private/Task"
 import { IoSearch } from "react-icons/io5";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import AddTaskModal from "../components/modal/AddTaskModal";
 import { IoMdAdd } from "react-icons/io";
-
+import createAxiosInstance from "../api/axiosInstance";
+import { Toaster } from 'react-hot-toast';
 
 const Home = () => {
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [tasksData, setTasksData] = useState(null)
+  const [taskAdded, setTaskAdded] = useState(false)
+  const [isDeleted, setIsDeleted] = useState(false)
+  const [isUpdated, setIsUpdated] = useState(false)
+  const axiosInstance = createAxiosInstance()
 
   const handleAddTaskModal = () => {
     setIsAddTaskModalOpen(true);
@@ -16,6 +23,28 @@ const Home = () => {
   const handleCloseModal = () => {
     setIsAddTaskModalOpen(false);
   };
+
+  const fetchTask = async () => {
+    try {
+      setLoading(true)
+      const response = await axiosInstance.get('tasks/')
+      if (response.status === 200) {
+        setTasksData(response.data)
+        console.log(response.data)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+    finally {
+      setLoading(false)
+      console.log(tasksData)
+    }
+  }
+
+  useEffect(() => {
+    fetchTask()
+  }, [taskAdded, isDeleted, isUpdated])
+
   return (
     <>
       <div className="min-h-screen w-full bg-gray-100 dark:bg-neutral-900 py-5 px-10">
@@ -24,17 +53,14 @@ const Home = () => {
             All Tasks
           </p>
           <div className="flex gap-6 items-center ">
-
             <div className="">
               <label className=" px-1 text-gray-800 dark:text-gray-400" htmlFor="title">Filter by</label>
-
               <select className="block shadow-sm bg-gray-200 dark:bg-neutral-700 p-[7px] dark:text-gray-300  mt-1 focus:outline-none rounded-xl w-full">
                 <option>High Priority</option>
                 <option>Medium Priority</option>
                 <option>Low Priority</option>
               </select>
             </div>
-
             <div className="  w-1/2">
               <label className="text-gray-800 dark:text-gray-400" htmlFor="title">Search</label>
               <div className="relative mt-1">
@@ -45,23 +71,21 @@ const Home = () => {
                 />
                 <IoSearch className="absolute left-3 top-1/2  -translate-y-1/2 text-gray-600 dark:text-gray-300" />
               </div>
-
             </div>
-            
             <div className="pt-7">
               <button className="shadow-md flex items-center gap-2 bg-rose-600 p-[8px] px-8 rounded-xl font-semibold text-white hover:bg-rose-700 transition-transform hover:scale-105 duration-700" onClick={handleAddTaskModal}>
                 <IoMdAdd className="text-xl" />Add Task
               </button>
             </div>
           </div>
-
-
           <div className="flex gap-10 flex-wrap mt-10">
+            {tasksData && tasksData.map((data) => {
+              return (
+                <div key={data.id}><Task data={data} setIsDeleted={setIsDeleted} setIsUpdated ={setIsUpdated} /></div>
+              )
+            })}
 
-            <Task />
-            <Task />
-
-            <div className="bg-gray-200 dark:bg-neutral-800 max-w-xs w-full h-64 rounded-2xl flex items-center justify-center shadow-xl cursor-pointer" onClick={handleAddTaskModal}>
+            <div className="bg-gray-200 dark:bg-neutral-800 max-w-xs w-full min-h-64 rounded-2xl flex items-center justify-center shadow-xl cursor-pointer" onClick={handleAddTaskModal}>
               <p className="flex items-center gap-2 text-neutral-800 dark:text-gray-200">
                 <IoMdAddCircleOutline className="text-3xl" />
                 <p className="text-lg ">Add new Task</p>
@@ -70,9 +94,11 @@ const Home = () => {
           </div>
         </div>
       </div>
+
       {isAddTaskModalOpen && (
-        <AddTaskModal isOpen={isAddTaskModalOpen} onClose={handleCloseModal} />
+        <AddTaskModal isOpen={isAddTaskModalOpen} onClose={handleCloseModal} setTaskAdded={setTaskAdded}  />
       )}
+      <Toaster />
     </>
   )
 }

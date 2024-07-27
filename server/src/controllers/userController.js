@@ -29,7 +29,7 @@ const register_user = async (req,res)=>{
     res.status(201).json(user);
     
   } catch (error) {
-    res.status(400).json({message:error.message})
+    res.status(500).json({message:error.message})
   }
 }
 
@@ -40,17 +40,17 @@ const login_user = async (req, res)=>{
     const user =  await User.findOne({email:email})
 
     if(!user){
-      return res.status(400).json({message:'Invalid Email !'})
+      return res.status(401).json({message:'Invalid Email !'})
     }
 
     const isPasswordMatched = await bcrypt.compare(password, user.password)
     if(!isPasswordMatched){
-      return res.status(400).json({message:'Invalid Password !'})
+      return res.status(401).json({message:'Invalid Password !'})
     }
 
     const payload = {
       user:{
-        id:user.id,
+        _id:user.id,
       }
     }
 
@@ -60,7 +60,7 @@ const login_user = async (req, res)=>{
       {expiresIn:'1h'},
       (error, token)=>{
         if(error) throw error;
-        res.status(201).json({'message':'Successfully Logged in',token});
+        res.status(200).json({'message':'Successfully Logged in',token});
       }
     )
   } catch (error) {
