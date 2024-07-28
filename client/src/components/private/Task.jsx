@@ -1,17 +1,19 @@
 import { useState } from "react";
-import { FcMediumPriority } from "react-icons/fc";
 import { MdEditSquare } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { IoMdMore } from "react-icons/io";
-import createAxiosInstance from "../../api/axiosInstance";
 import Swal from 'sweetalert2';
-import toast from 'react-hot-toast';
 import AddTaskModal from "../modal/AddTaskModal";
+import { useTask } from "../../context/TaskContext";
+import { FcHighPriority } from "react-icons/fc";
+import { FcLowPriority } from "react-icons/fc";
+import { FcMediumPriority } from "react-icons/fc";
 
-const Task = ({data, setIsDeleted, setIsUpdated}) => {
-  const axiosInstance = createAxiosInstance()
+
+const Task = ({data}) => {
   const [taskId, setTaskId] = useState(null)
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
+  const {deleteTask} = useTask()
 
   const handleCloseModal = () => {
     setIsAddTaskModalOpen(false);
@@ -33,21 +35,6 @@ const Task = ({data, setIsDeleted, setIsUpdated}) => {
     });
   }
 
-  const deleteTask = async (task_id)=>{
-    try {
-      const response = await axiosInstance.delete(`tasks/${task_id}/`)
-      if(response.status === 200){
-        toast.success("Successfully deleted your task !")
-        setIsDeleted(true)
-      }
-    } catch (error) {
-      if(error.response){
-        toast.error("Sorry, Couldn't delete your task !")
-      }
-      console.log(error)
-    }
-  }
-
   const handleUpdate = (task_id)=>{
     setTaskId(task_id)
     setIsAddTaskModalOpen(true);
@@ -57,7 +44,9 @@ const Task = ({data, setIsDeleted, setIsUpdated}) => {
       <div>
         <div className="bg-gray-200 dark:bg-neutral-800  w-80 p-4 rounded-2xl shadow-xl min-h-64">
           <div className="flex justify-between items-center">
-            <p className="font-normal text-gray-700 dark:text-neutral-400 flex items-center gap-1 text-md"><FcMediumPriority />{data.priority.toUpperCase()} PRIORITY</p>
+            <p className="font-normal text-gray-700 dark:text-neutral-400 flex items-center gap-1 text-md">
+            {data.priority === "high"?(<FcHighPriority />):data.priority === "medium"?(<FcMediumPriority />):data.priority ==="low"?(<FcLowPriority/>):null}
+            {data.priority.toUpperCase()} PRIORITY</p>
             <IoMdMore className="text-neutral-900 dark:text-gray-200 text-2xl" />
           </div>
           <div className="mt-5">
@@ -75,7 +64,7 @@ const Task = ({data, setIsDeleted, setIsUpdated}) => {
         </div>
       </div>
       {isAddTaskModalOpen && (
-        <AddTaskModal isOpen={isAddTaskModalOpen} onClose={handleCloseModal} task_id = {taskId} setIsUpdated = {setIsUpdated} />
+        <AddTaskModal isOpen={isAddTaskModalOpen} onClose={handleCloseModal} task_id = {taskId} />
       )}
     </>
   )

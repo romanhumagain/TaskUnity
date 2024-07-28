@@ -3,16 +3,17 @@ import { IoMdAdd } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import createAxiosInstance from "../../api/axiosInstance";
 import toast from 'react-hot-toast';
+import { useTask } from "../../context/TaskContext";
+import { useAuth } from "../../context/AuthContext";
 
-
-
-const AddTaskModal = ({ isOpen, onClose, setTaskAdded, setIsUpdated, task_id = null }) => {
+const AddTaskModal = ({ isOpen, onClose, task_id = null }) => {
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
-  const axiosInstance = createAxiosInstance()
+  const axiosInstance = createAxiosInstance();
+  const{setIsUpdated, setIsAdded} = useTask();
+  const {logoutUser} = useAuth();
 
   useEffect(() => {
     setIsModalOpen(isOpen);
-    console.log(task_id)
   }, [isOpen]);
 
   const closeModal = () => {
@@ -44,6 +45,11 @@ const AddTaskModal = ({ isOpen, onClose, setTaskAdded, setIsUpdated, task_id = n
         });
       }
     } catch (error) {
+      if(error.response){
+        if(error.response.status === 401){
+          logoutUser()
+        }
+      }
       console.log(error)
     }
   }
@@ -65,11 +71,12 @@ const AddTaskModal = ({ isOpen, onClose, setTaskAdded, setIsUpdated, task_id = n
         if (response.status === 201) {
           closeModal()
           toast.success("Successfully added task !")
-          setTaskAdded(true)
+          setIsAdded(true)
         }
       } catch (error) {
         if (error.response) {
           if (error.response.status === 401) {
+            logoutUser()
             toast.error("Unauthorized")
           }
         }
@@ -87,6 +94,7 @@ const AddTaskModal = ({ isOpen, onClose, setTaskAdded, setIsUpdated, task_id = n
       } catch (error) {
         if (error.response) {
           if (error.response.status === 401) {
+            logoutUser()
             toast.error("Unauthorized")
           }
         }

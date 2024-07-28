@@ -57,7 +57,7 @@ const login_user = async (req, res)=>{
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
-      {expiresIn:'1h'},
+      {expiresIn:'8h'},
       (error, token)=>{
         if(error) throw error;
         res.status(200).json({'message':'Successfully Logged in',token});

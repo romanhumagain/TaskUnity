@@ -6,17 +6,11 @@ import Sidebar from "./components/Sidebar"
 import Home from "./pages/Home"
 import Dashboard from "./pages/Dashboard"
 import { jwtDecode } from "jwt-decode"
+import { useAuth } from "./context/AuthContext"
 
 function AppRoutes() {
-  const auth_token = localStorage.getItem("token")
-  const [authToken, setAuthToken] = useState(auth_token ? auth_token : null)
-  const [user, setUser] = useState(null)
-
-  useEffect(() => {
-    if (authToken) {
-      setUser(jwtDecode(authToken))
-    }
-  }, [authToken])
+  const {user} = useAuth()
+  console.log(user)
 
   return (
     <>

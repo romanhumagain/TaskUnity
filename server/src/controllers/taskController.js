@@ -3,8 +3,13 @@ const Task = require('../models/taskModel')
 
 const getTasks = async (req, res) => {
   try {
+    const {priority} = req.query;
+    const query = {user:req.user._id}
+    if (priority){
+      query.priority = priority
+    }
 
-    const tasks = await Task.find({user:req.user._id}).sort({updated_at:-1});
+    const tasks = await Task.find(query).sort({ updated_at: -1 });
     res.status(200).json(tasks)
 
   } catch (error) {

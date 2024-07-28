@@ -12,16 +12,19 @@ import { MdDarkMode } from "react-icons/md";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { GrDocumentMissing } from "react-icons/gr";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Sidebar = () => {
   const [mode, setMode] = useState("dark")
   const element = document.documentElement
   const location = useLocation()
   const pathname = location.pathname
+  const {logoutUser} = useAuth()
 
   const isActive = (path) => {
     return pathname.split('/').pop() === path
   }
+
 
   useEffect(() => {
     switch (mode) {
@@ -100,6 +103,8 @@ const Sidebar = () => {
         <hr className="mt-8 mx-5 border border-gray-300 dark:border-neutral-700"></hr>
         <div className="px-5 mt-4">
           <p className="font-semibold text-md text-gray-900 dark:text-neutral-300 flex items-center gap-1"><CgDetailsMore />More</p>
+          <p className="font-semibold text-md text-gray-900 dark:text-neutral-300 flex items-center gap-1 mt-3" onClick={logoutUser}><CgDetailsMore />Logout</p>
+
 
           <label className="inline-flex items-center me-3 cursor-pointer mt-4">
             <input type="checkbox" className="sr-only peer" onChange={handleMode} />

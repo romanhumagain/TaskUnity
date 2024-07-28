@@ -4,17 +4,12 @@ import { IoSearch } from "react-icons/io5";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import AddTaskModal from "../components/modal/AddTaskModal";
 import { IoMdAdd } from "react-icons/io";
-import createAxiosInstance from "../api/axiosInstance";
 import { Toaster } from 'react-hot-toast';
+import { useTask } from "../context/TaskContext";
 
 const Home = () => {
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [tasksData, setTasksData] = useState(null)
-  const [taskAdded, setTaskAdded] = useState(false)
-  const [isDeleted, setIsDeleted] = useState(false)
-  const [isUpdated, setIsUpdated] = useState(false)
-  const axiosInstance = createAxiosInstance()
+  const { tasksData, fetchTask , setPriority, priority} = useTask()
 
   const handleAddTaskModal = () => {
     setIsAddTaskModalOpen(true);
@@ -23,27 +18,13 @@ const Home = () => {
   const handleCloseModal = () => {
     setIsAddTaskModalOpen(false);
   };
-
-  const fetchTask = async () => {
-    try {
-      setLoading(true)
-      const response = await axiosInstance.get('tasks/')
-      if (response.status === 200) {
-        setTasksData(response.data)
-        console.log(response.data)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-    finally {
-      setLoading(false)
-      console.log(tasksData)
-    }
+  const handleFilter = (e)=>{
+    setPriority(e.target.value);
   }
 
   useEffect(() => {
     fetchTask()
-  }, [taskAdded, isDeleted, isUpdated])
+  }, [])
 
   return (
     <>
@@ -55,10 +36,12 @@ const Home = () => {
           <div className="flex gap-6 items-center ">
             <div className="">
               <label className=" px-1 text-gray-800 dark:text-gray-400" htmlFor="title">Filter by</label>
-              <select className="block shadow-sm bg-gray-200 dark:bg-neutral-700 p-[7px] dark:text-gray-300  mt-1 focus:outline-none rounded-xl w-full">
-                <option>High Priority</option>
-                <option>Medium Priority</option>
-                <option>Low Priority</option>
+              <select className="block shadow-sm bg-gray-200 dark:bg-neutral-700 p-[7px] dark:text-gray-300  mt-1 focus:outline-none rounded-xl w-full"
+              onChange={handleFilter}>
+                <option value="" selected={priority===""}>All</option>
+                <option value="high" selected={priority==="high"}>High Priority</option>
+                <option value="medium" selected={priority==="medium"}>Medium Priority</option>
+                <option value="low" selected={priority==="low"}>Low Priority</option>
               </select>
             </div>
             <div className="  w-1/2">
@@ -81,7 +64,7 @@ const Home = () => {
           <div className="flex gap-10 flex-wrap mt-10">
             {tasksData && tasksData.map((data) => {
               return (
-                <div key={data.id}><Task data={data} setIsDeleted={setIsDeleted} setIsUpdated ={setIsUpdated} /></div>
+                <div key={data.id}><Task data={data} /></div>
               )
             })}
 
@@ -96,7 +79,7 @@ const Home = () => {
       </div>
 
       {isAddTaskModalOpen && (
-        <AddTaskModal isOpen={isAddTaskModalOpen} onClose={handleCloseModal} setTaskAdded={setTaskAdded}  />
+        <AddTaskModal isOpen={isAddTaskModalOpen} onClose={handleCloseModal} />
       )}
       <Toaster />
     </>

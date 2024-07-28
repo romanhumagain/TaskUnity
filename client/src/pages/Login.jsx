@@ -3,9 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { IoLogIn } from "react-icons/io5";
 import { useForm } from "react-hook-form";
 import { ToastContainer } from 'react-toastify';
-import Toastify from "../utils/Toastify";
-import Swal from 'sweetalert2';
-import createAxiosInstance from "../api/axiosInstance";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const form = useForm({
@@ -18,33 +16,7 @@ const Login = () => {
   const { register, handleSubmit, formState } = form;
   const { errors } = formState;
   const navigate = useNavigate();
-  const axiosInstance = createAxiosInstance()
-
-  const onsubmit = async (data) => {
-    try {
-      console.log("yes")
-      const response = await axiosInstance.post('/login-user/', data)
-      if (response.status === 200) {
-        Toastify("Successfully Logged in !", "success")
-        localStorage.setItem("token", response.data?.token)
-        Swal.fire({
-          title: "Success",
-          text: "Successfully logged in your account !",
-          icon: "success"
-        });
-        navigate('/')
-      }
-    } catch (error) {
-      if (error.response) {
-        if (error.response.status === 401) {
-          Toastify("Invalid Credentials !", "error")
-        }
-        else if (error.response.status === 500) {
-          Toastify("Sorry, Something went wrong. Please try again later !", "error")
-        }
-      }
-    }
-  }
+  const {loginUser, logoutUser} = useAuth()
 
   return (
     <>
@@ -57,7 +29,7 @@ const Login = () => {
             Sign in to TaskUnity
           </div>
           <div>
-            <form onSubmit={handleSubmit(onsubmit)}>
+            <form onSubmit={handleSubmit(loginUser)}>
               <div className="mb-4 m-3">
                 <label className="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-100 duration-150" htmlFor="email" >
                   Email
