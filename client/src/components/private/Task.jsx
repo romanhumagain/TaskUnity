@@ -13,7 +13,7 @@ import { FcMediumPriority } from "react-icons/fc";
 const Task = ({data}) => {
   const [taskId, setTaskId] = useState(null)
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
-  const {deleteTask} = useTask()
+  const {deleteTask, handleTaskCompletion} = useTask()
 
   const handleCloseModal = () => {
     setIsAddTaskModalOpen(false);
@@ -39,6 +39,7 @@ const Task = ({data}) => {
     setTaskId(task_id)
     setIsAddTaskModalOpen(true);
   }
+
   return (
     <>
       <div>
@@ -55,9 +56,15 @@ const Task = ({data}) => {
             <p className="text-gray-500 dark:text-neutral-500 mt-3 text-[14px]">Due:- {data.due_date}</p>
           </div>
           <div className="mt-4 flex justify-between bottom-0">
-            <p className="p-1 bg-teal-600 px-3 inline rounded-2xl font-semibold text-white cursor-pointer transition-transform hover:scale-105 duration-700">Incomplete</p>
+          {data.is_completed ? (
+            <button className="p-1 bg-teal-600 px-3 inline rounded-2xl font-semibold text-white cursor-pointer transition-transform hover:scale-105 duration-700" onClick={()=>handleTaskCompletion("incomplete",data._id )}>Completed</button>
+          ):(
+            <button className={`p-1 bg-rose-600 px-3 inline rounded-2xl font-semibold text-white cursor-pointer transition-transform hover:scale-105 duration-700 ${new Date(data.due_date) < new Date() && 'line-through hover:scale-100'} `} disabled={new Date(data.due_date) < new Date() }  onClick={()=>handleTaskCompletion("completed",data._id )}>Incomplete</button>
+          )}
             <div className="flex gap-3 items-center">
+            {new Date(data.due_date) >= new Date() && (
               <MdEditSquare className="text-neutral-800 dark:text-gray-200 text-2xl cursor-pointer transition-transform hover:scale-110 duration-700"  onClick={()=>handleUpdate(data._id)}/>
+            ) }
               <MdDelete className="text-neutral-800 dark:text-gray-200 text-2xl cursor-pointer transition-transform hover:scale-110 duration-700" onClick={()=>handleDeleteTask(data._id)} />
             </div>
           </div>

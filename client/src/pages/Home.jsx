@@ -30,7 +30,7 @@ const Home = () => {
     <>
       <div className="min-h-screen w-full bg-gray-100 dark:bg-neutral-900 py-5 px-10">
         <div className="max-w-6xl w-full bg-gray-100 dark:bg-neutral-900 min-h-screen mx-auto shadow-sm p-5 px-10">
-          <p className="font-semibold text-2xl p-2 text-gray-800 dark:text-gray-300 mb-5 mt-4">
+          <p className="font-semibold text-3xl p-2 text-gray-800 dark:text-gray-300 mb-5 mt-4">
             All Tasks
           </p>
           <div className="flex gap-6 items-center ">

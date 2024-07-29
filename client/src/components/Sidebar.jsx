@@ -10,21 +10,26 @@ import { RiMenu4Fill } from "react-icons/ri";
 import { MdSunny } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
+import { VscPinned } from "react-icons/vsc";
 import { GrDocumentMissing } from "react-icons/gr";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { MdKeyboardArrowDown } from "react-icons/md";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import { IoLogOut } from "react-icons/io5";
+import Swal from 'sweetalert2';
 
 const Sidebar = () => {
   const [mode, setMode] = useState("dark")
   const element = document.documentElement
   const location = useLocation()
   const pathname = location.pathname
-  const {logoutUser} = useAuth()
+  const { logoutUser } = useAuth()
+  const [taskMenuOpen, setTaskMenuOpen] = useState(true)
 
   const isActive = (path) => {
     return pathname.split('/').pop() === path
   }
-
 
   useEffect(() => {
     switch (mode) {
@@ -49,6 +54,25 @@ const Sidebar = () => {
     }
   }
 
+  const handleTaskMenu = () => {
+    setTaskMenuOpen(!taskMenuOpen)
+  }
+
+  const handleLogoutUser = ()=>{
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You have to sign in again to access your account !",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#808080",
+      confirmButtonText: "Yes, Logout!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logoutUser()
+      }
+    });
+  }
   return (
     <>
       <div className="text-gray-900 bg-gray-100 dark:text-gray-100 dark:bg-neutral-900 min-h-screen w-full py-5 px-2 border-r-2 border-gray-200 dark:border-neutral-600">
@@ -78,16 +102,24 @@ const Sidebar = () => {
         <div className="px-5">
           <p className="font-medium mt-2 text-gray-600 dark:text-neutral-400 text-[13px]">Private Space</p>
           <div className="mt-4">
-            <Link to={"/task"}><p className="font-semibold text-md text-gray-900 dark:text-neutral-300 flex items-center gap-1 p-[2px] rounded-md hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300"><CiViewList />Todo</p></Link>
-            <div className="ml-3 my-3">
+            <div className="flex items-center">
+              {taskMenuOpen ? (
+                <MdKeyboardArrowDown className="text-xl cursor-pointer" onClick={handleTaskMenu} />
+              ) : (
+                <MdKeyboardArrowRight className="text-xl cursor-pointer" onClick={handleTaskMenu} />
+              )}
+              <Link to={"/task"}><p className="font-semibold text-md text-gray-900 dark:text-neutral-300 flex items-center gap-1 p-[2px] rounded-md hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300"><CiViewList />Todo</p></Link>
+            </div>
+            <div className={`${!taskMenuOpen && 'hidden'}   ml-3 my-3 `}>
               <Link to={"/task"}><p className={`text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1 p-[2px] rounded-md hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300 ${isActive('task') && 'bg-gray-200 dark:bg-neutral-800'}`}><GoTasklist />All Task</p></Link>
-              <Link to={""}><p className={`text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1 p-[2px] rounded-md hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300 ${isActive('completed') && 'bg-gray-200 dark:bg-neutral-800'}`}><MdOutlineTaskAlt />Completed</p></Link>
-              <Link to={""}><p className={`text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1 p-[2px] rounded-md hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300 ${isActive('pending') && 'bg-gray-200 dark:bg-neutral-800'}`}><MdOutlinePending />Pending</p></Link>
-              <Link to={""}><p className={`text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1 p-[2px] rounded-md hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300 ${isActive('overdue') && 'bg-gray-200 dark:bg-neutral-800'}`}><GrDocumentMissing className="text-sm" />Overdue</p></Link>
+              <Link to={"/completed-task"}><p className={`text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1 p-[2px] rounded-md hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300 ${isActive('completed-task') && 'bg-gray-200 dark:bg-neutral-800'}`}><MdOutlineTaskAlt />Completed</p></Link>
+              <Link to={"/pending-task"}><p className={`text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1 p-[2px] rounded-md hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300 ${isActive('pending-task') && 'bg-gray-200 dark:bg-neutral-800'}`}><MdOutlinePending />Pending</p></Link>
+              <Link to={"/overdue-task"}><p className={`text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1 p-[2px] rounded-md hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300 ${isActive('overdue-task') && 'bg-gray-200 dark:bg-neutral-800'}`}><GrDocumentMissing className="text-sm" />Overdue</p></Link>
+              <Link to={"/important-task"}><p className={`text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1 p-[2px] rounded-md hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300 ${isActive('important-task') && 'bg-gray-200 dark:bg-neutral-800'}`}><VscPinned className="text-sm" />Important</p></Link>
             </div>
           </div>
         </div>
-        <hr className="mt-8 mx-5 border border-gray-300 dark:border-neutral-700"></hr>
+        <hr className="mt-5 mx-5 border border-gray-300 dark:border-neutral-700"></hr>
         <div className="px-5">
           <p className="font-medium mt-2 text-gray-600 dark:text-neutral-400 text-[13px]">Team Space</p>
           <div className="mt-4">
@@ -102,11 +134,9 @@ const Sidebar = () => {
         </div>
         <hr className="mt-8 mx-5 border border-gray-300 dark:border-neutral-700"></hr>
         <div className="px-5 mt-4">
-          <p className="font-semibold text-md text-gray-900 dark:text-neutral-300 flex items-center gap-1"><CgDetailsMore />More</p>
-          <p className="font-semibold text-md text-gray-900 dark:text-neutral-300 flex items-center gap-1 mt-3" onClick={logoutUser}><CgDetailsMore />Logout</p>
+          <p className="font-semibold text-md text-gray-900 dark:text-neutral-300 flex items-center gap-1 mt-3 cursor-pointer" onClick={handleLogoutUser}><IoLogOut className="text-xl" />Logout</p>
 
-
-          <label className="inline-flex items-center me-3 cursor-pointer mt-4">
+          <label className="inline-flex items-center me-3 cursor-pointer mt-6">
             <input type="checkbox" className="sr-only peer" onChange={handleMode} />
             <div className="relative w-11 h-5 bg-neutral-700 rounded-full peer dark:bg-gray-300 peer-focus:ring-2 peer-focus:ring-teal-400 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gray-300 dark:bg-gray"></div>
             <span className="ms-1 text-xs font-medium text-gray-800 dark:text-gray-200">{mode === 'dark' ? <MdSunny className='text-2xl' /> : <MdDarkMode className=' text-2xl' />}</span>

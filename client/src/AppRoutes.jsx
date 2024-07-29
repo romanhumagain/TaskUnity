@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Sidebar from "./components/Sidebar"
 import Home from "./pages/Home"
 import Dashboard from "./pages/Dashboard"
-import { jwtDecode } from "jwt-decode"
 import { useAuth } from "./context/AuthContext"
+import CompletedTask from "./pages/Task/CompletedTask"
+import OverdueTask from "./pages/Task/OverdueTask"
+import PendingTask from "./pages/Task/PendingTask"
+import ImportantTask from "./pages/Task/ImportantTask"
+
 
 function AppRoutes() {
   const {user} = useAuth()
@@ -23,6 +26,10 @@ function AppRoutes() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/task" element={<Home />} />
+              <Route path="/completed-task" element={<CompletedTask />} />
+              <Route path="/pending-task" element={<PendingTask />} />
+              <Route path="/overdue-task" element={<OverdueTask />} />
+              <Route path="/important-task" element={<ImportantTask />} />
             </Routes>
           </div>
         </div>

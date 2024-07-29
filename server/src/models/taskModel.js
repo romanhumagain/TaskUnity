@@ -5,13 +5,12 @@ const taskSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: false //for testing without user
   },
   title: {
     type: String,
     required: true,
   },
-  description: {
+  description: { 
     type: String,
     required: true
   },
