@@ -44,7 +44,7 @@ const Register = () => {
   return (
     <>
       <div className=' h-screen w-full flex items-center justify-center dark:bg-neutral-200'>
-        <div className='bg-slate-100 p-8 m-4 mx-auto rounded-lg shadow-2xl max-w-md w-full dark:bg-neutral-800/95 dark:text-gray-100 duration-300'>
+        <div className='bg-gray-200 p-8 m-4 mx-auto rounded-lg shadow-2xl max-w-md w-full dark:bg-neutral-800/95 dark:text-gray-100 duration-300'>
           <div className="text-center text-3xl mb-2">
             TaskUnity
           </div>

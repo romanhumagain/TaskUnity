@@ -2,15 +2,15 @@ import { useEffect } from "react";
 import Task from "../../components/private/Task"
 import { IoSearch } from "react-icons/io5";
 import { useTask } from "../../context/TaskContext";
+import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 
 
 const CompletedTask = () => {
   const { completedTask, fetchCompletedTask } = useTask()
 
-
   useEffect(() => {
     fetchCompletedTask()
-  }, [])
+  }, []);
 
   return (
     <>
@@ -18,8 +18,8 @@ const CompletedTask = () => {
         <div className="max-w-6xl w-full bg-gray-100 dark:bg-neutral-900 min-h-screen mx-auto shadow-sm p-5 px-10">
           {completedTask?.length > 0 ? (
             <>
-            <p className="font-semibold text-3xl p-2 text-gray-800 dark:text-gray-300 mb-5 mt-4">
-                Completed Tasks <span className="text-rose-600">({completedTask?.length})</span>
+              <p className="font-semibold text-3xl p-2 text-gray-800 dark:text-gray-300 mb-5 mt-4 flex items-center gap-2">
+                <IoCheckmarkDoneCircleSharp /> Completed Tasks <span className="text-rose-600">({completedTask?.length})</span>
               </p>
               <div className="flex gap-6 items-center ">
                 <div className="  w-1/2">

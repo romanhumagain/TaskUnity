@@ -20,7 +20,7 @@ import { IoLogOut } from "react-icons/io5";
 import Swal from 'sweetalert2';
 
 const Sidebar = () => {
-  const [mode, setMode] = useState("dark")
+  const [mode, setMode] = useState(localStorage.getItem("mode")?localStorage.getItem("mode"):"light")
   const element = document.documentElement
   const location = useLocation()
   const pathname = location.pathname
@@ -58,7 +58,7 @@ const Sidebar = () => {
     setTaskMenuOpen(!taskMenuOpen)
   }
 
-  const handleLogoutUser = ()=>{
+  const handleLogoutUser = () => {
     Swal.fire({
       title: "Are you sure?",
       text: "You have to sign in again to access your account !",
@@ -90,7 +90,7 @@ const Sidebar = () => {
               <img src="src\assets\heroimg.jpg" className="rounded-full w-11 h-11"></img>
             </div>
             <div className="col-span-9">
-              <p className="text-md text-gray-900 dark:text-gray-200">Roman Humagain</p>
+              <p className="text-md text-gray-900 dark:text-gray-200 font-semibold">Roman Humagain</p>
               <p className="truncate text-sm text-gray-600 dark:text-neutral-400">romanhumagain@gmail.com</p>
             </div>
           </div>
@@ -110,7 +110,7 @@ const Sidebar = () => {
               )}
               <Link to={"/task"}><p className="font-semibold text-md text-gray-900 dark:text-neutral-300 flex items-center gap-1 p-[2px] rounded-md hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300"><CiViewList />Todo</p></Link>
             </div>
-            <div className={`${!taskMenuOpen && 'hidden'}   ml-3 my-3 `}>
+            <div className={`${!taskMenuOpen && 'hidden'}   ml-5 my-3 `}>
               <Link to={"/task"}><p className={`text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1 p-[2px] rounded-md hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300 ${isActive('task') && 'bg-gray-200 dark:bg-neutral-800'}`}><GoTasklist />All Task</p></Link>
               <Link to={"/completed-task"}><p className={`text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1 p-[2px] rounded-md hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300 ${isActive('completed-task') && 'bg-gray-200 dark:bg-neutral-800'}`}><MdOutlineTaskAlt />Completed</p></Link>
               <Link to={"/pending-task"}><p className={`text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1 p-[2px] rounded-md hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300 ${isActive('pending-task') && 'bg-gray-200 dark:bg-neutral-800'}`}><MdOutlinePending />Pending</p></Link>
@@ -126,7 +126,7 @@ const Sidebar = () => {
             <p className="font-semibold text-md text-gray-900 dark:text-neutral-300 flex items-center gap-1"><IoMdAdd />New Workspace</p>
           </div>
           <div>
-            <div className="ml-3 my-3">
+            <div className="ml-5 my-3">
               <p className="text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1"><BsPersonWorkspace />Workspace1</p>
               <p className="text-md text-gray-800 dark:text-neutral-400 mb-2 flex items-center gap-1"><BsPersonWorkspace />Workspace2</p>
             </div>

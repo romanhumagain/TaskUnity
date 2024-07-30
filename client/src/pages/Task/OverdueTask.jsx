@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import Task from "../../components/private/Task"
 import { useTask } from "../../context/TaskContext";
+import { GrDocumentMissing } from "react-icons/gr";
 
 const OverdueTask = () => {
   const { overdueTask, fetchOverdueTask } = useTask()
 
-
   useEffect(() => {
     fetchOverdueTask()
-  }, [])
+  }, []);
 
   return (
     <>
@@ -16,8 +16,8 @@ const OverdueTask = () => {
         <div className="max-w-6xl w-full bg-gray-100 dark:bg-neutral-900 min-h-screen mx-auto shadow-sm p-5 px-10">
           {overdueTask?.length > 0 ? (
             <>
-              <p className="font-semibold text-3xl p-2 text-gray-800 dark:text-gray-300 mb-5 mt-4">
-                Overdue Tasks <span className="text-rose-600">({overdueTask?.length})</span>
+              <p className="font-semibold text-3xl p-2 text-gray-800 dark:text-gray-300 mb-5 mt-4 flex items-center gap-2">
+                <GrDocumentMissing/>Overdue Tasks <span className="text-rose-600">({overdueTask?.length})</span>
               </p>
 
               <div className="flex gap-10 flex-wrap mt-10">

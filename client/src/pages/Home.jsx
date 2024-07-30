@@ -6,10 +6,11 @@ import AddTaskModal from "../components/modal/AddTaskModal";
 import { IoMdAdd } from "react-icons/io";
 import { Toaster } from 'react-hot-toast';
 import { useTask } from "../context/TaskContext";
+import { BiTask } from "react-icons/bi";
 
 const Home = () => {
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
-  const { tasksData, fetchTask , setPriority, priority} = useTask()
+  const { tasksData, fetchTask, setPriority, priority } = useTask()
 
   const handleAddTaskModal = () => {
     setIsAddTaskModalOpen(true);
@@ -18,7 +19,7 @@ const Home = () => {
   const handleCloseModal = () => {
     setIsAddTaskModalOpen(false);
   };
-  const handleFilter = (e)=>{
+  const handleFilter = (e) => {
     setPriority(e.target.value);
   }
 
@@ -30,18 +31,19 @@ const Home = () => {
     <>
       <div className="min-h-screen w-full bg-gray-100 dark:bg-neutral-900 py-5 px-10">
         <div className="max-w-6xl w-full bg-gray-100 dark:bg-neutral-900 min-h-screen mx-auto shadow-sm p-5 px-10">
-          <p className="font-semibold text-3xl p-2 text-gray-800 dark:text-gray-300 mb-5 mt-4">
+          <p className="font-semibold text-3xl p-2 text-gray-800 dark:text-gray-300 mb-5 mt-4 flex items-center gap-1">
+            <BiTask />
             All Tasks
           </p>
           <div className="flex gap-6 items-center ">
             <div className="">
               <label className=" px-1 text-gray-800 dark:text-gray-400" htmlFor="title">Filter by</label>
               <select className="block shadow-sm bg-gray-200 dark:bg-neutral-700 p-[7px] dark:text-gray-300  mt-1 focus:outline-none rounded-xl w-full"
-              onChange={handleFilter}>
-                <option value="" selected={priority===""}>All</option>
-                <option value="high" selected={priority==="high"}>High Priority</option>
-                <option value="medium" selected={priority==="medium"}>Medium Priority</option>
-                <option value="low" selected={priority==="low"}>Low Priority</option>
+                onChange={handleFilter}>
+                <option value="" selected={priority === ""}>All</option>
+                <option value="high" selected={priority === "high"}>High Priority</option>
+                <option value="medium" selected={priority === "medium"}>Medium Priority</option>
+                <option value="low" selected={priority === "low"}>Low Priority</option>
               </select>
             </div>
             <div className="  w-1/2">

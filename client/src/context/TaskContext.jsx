@@ -13,8 +13,8 @@ const TaskContextProvider = ({ children }) => {
   const [pendingTask, setPendingTask] = useState(null)
   const [overdueTask, setOverdueTask] = useState(null)
   const [importantTask, setImportantTask] = useState(null)
-
-
+  const [allTasks, setAllTasks] = useState(null)
+  const [taskDetails, setTaskDetails] = useState(null)
 
   const [isDeleted, setIsDeleted] = useState(false);
   const [isUpdated, setIsUpdated] = useState(false);
@@ -31,6 +31,48 @@ const TaskContextProvider = ({ children }) => {
       const response = await axiosInstance.get(`tasks/?priority=${priority}`)
       if (response.status === 200) {
         setTasksData(response.data)
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          logoutUser()
+        }
+      }
+      console.log(error)
+    }
+    finally {
+      setLoading(false)
+    }
+  }
+
+  // function to get all tasks 
+  const fetchAllTask = async () => {
+    try {
+      setLoading(true)
+      const response = await axiosInstance.get(`tasks/all`)
+      if (response.status === 200) {
+        setAllTasks(response.data)
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          logoutUser()
+        }
+      }
+      console.log(error)
+    }
+    finally {
+      setLoading(false)
+    }
+  }
+
+  // to fetch the specific task details 
+  const fetchTaskDetails = async (id) => {
+    try {
+      setLoading(true)
+      const response = await axiosInstance.get(`tasks/${id}`)
+      if (response.status === 200) {
+        setTaskDetails(response.data)
       }
     } catch (error) {
       if (error.response) {
@@ -154,10 +196,10 @@ const TaskContextProvider = ({ children }) => {
   // function to update task completion
   const handleTaskCompletion = async (completion_status, task_id) => {
     const data = { is_completed: completion_status === "completed" };
-  
+
     try {
       const response = await axiosInstance.put(`tasks/${task_id}`, data);
-  
+
       if (response.status === 200) {
         toast.success("Successfully updated task!");
         setIsUpdated(true);
@@ -180,10 +222,10 @@ const TaskContextProvider = ({ children }) => {
         console.log(error);
       }
     }
-  
+
     console.log(data);
   };
-  
+
 
   useEffect(() => {
     fetchTask()
@@ -198,7 +240,7 @@ const TaskContextProvider = ({ children }) => {
       fetchImportantTask()
       resetData()
     }
-  }, [ isAdded, isDeleted, isUpdated])
+  }, [isAdded, isDeleted, isUpdated])
 
   const resetData = () => {
     setIsAdded(false)
@@ -221,8 +263,12 @@ const TaskContextProvider = ({ children }) => {
     fetchOverdueTask,
     handleTaskCompletion,
     overdueTask,
-    fetchImportantTask, 
-    importantTask
+    fetchImportantTask,
+    importantTask,
+    allTasks,
+    fetchAllTask,
+    fetchTaskDetails,
+    taskDetails
   }
 
   return (

@@ -9,6 +9,7 @@ import CompletedTask from "./pages/Task/CompletedTask"
 import OverdueTask from "./pages/Task/OverdueTask"
 import PendingTask from "./pages/Task/PendingTask"
 import ImportantTask from "./pages/Task/ImportantTask"
+import TaskDetails from "./pages/Task/TaskDetails"
 
 
 function AppRoutes() {
@@ -30,6 +31,8 @@ function AppRoutes() {
               <Route path="/pending-task" element={<PendingTask />} />
               <Route path="/overdue-task" element={<OverdueTask />} />
               <Route path="/important-task" element={<ImportantTask />} />
+              <Route path="/task-details/:id" element={<TaskDetails />} />
+
             </Routes>
           </div>
         </div>

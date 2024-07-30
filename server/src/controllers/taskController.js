@@ -1,18 +1,31 @@
 const Task = require('../models/taskModel')
 
+// to get all the task even if they are over due
+const getAllTasks = async (req, res) => {
+  try {
+    const query = {
+      user:req.user._id,
+    }
 
+    const tasks = await Task.find(query).sort({ created_at: -1 });
+    res.status(200).json(tasks)
+
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
 const getTasks = async (req, res) => {
   try {
     const {priority} = req.query;
     const query = {
       user:req.user._id,
-      due_date:{$gte:new Date()}
+      due_date:{$gt:new Date()}
     }
     if (priority){
       query.priority = priority
     }
 
-    const tasks = await Task.find(query).sort({ updated_at: -1 });
+    const tasks = await Task.find(query).sort({ created_at: -1 });
     res.status(200).json(tasks)
 
   } catch (error) {
@@ -139,6 +152,7 @@ const deleteTask = async (req, res) => {
 }
 
 module.exports = {
+  getAllTasks,
   getTasks,
   fetchTaskDetails,
   getCompletedTasks,
