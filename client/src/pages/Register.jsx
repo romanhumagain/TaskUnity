@@ -24,6 +24,7 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     try {
+      console.log(data)
       const response = await axiosInstance.post('register-user/', data)
       if (response.status === 201) {
         Toastify("Successfully registered your account !", "success")

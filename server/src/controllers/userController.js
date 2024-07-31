@@ -1,9 +1,19 @@
 const User = require('../models/userModels')
+const Profile = require('../models/userProfileModel')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
-
 require('dotenv').config()
+
+const get_user_details = async(req,res)=>{
+  try {
+    const { id } = req.params
+    const user = await User.findById(_id = id)
+    res.status(200).json(user)
+  } catch (error) {
+    res.status(500).json({message:error.message})
+  }
+};
 
 const get_user = async(req, res)=>{
   try {
@@ -25,11 +35,14 @@ const register_user = async (req,res)=>{
 
     const user = new User({full_name, username, email, password});
     await user.save();
+    const profile = new Profile({user : user._id})
+    await profile.save()
 
     res.status(201).json(user);
     
   } catch (error) {
     res.status(500).json({message:error.message})
+    console.log(error)
   }
 }
 
@@ -71,5 +84,6 @@ const login_user = async (req, res)=>{
 module.exports = {
   get_user, 
   register_user, 
-  login_user
+  login_user,
+  get_user_details
 }

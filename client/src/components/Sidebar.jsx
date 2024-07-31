@@ -18,14 +18,17 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { IoLogOut } from "react-icons/io5";
 import Swal from 'sweetalert2';
+import ProfileModal from "./modal/ProfileModal";
+import useAuthUser from "../hooks/useAuthUser";
 
 const Sidebar = () => {
-  const [mode, setMode] = useState(localStorage.getItem("mode")?localStorage.getItem("mode"):"light")
+  const [mode, setMode] = useState(localStorage.getItem("mode") ? localStorage.getItem("mode") : "light")
   const element = document.documentElement
   const location = useLocation()
   const pathname = location.pathname
-  const { logoutUser } = useAuth()
+  const { logoutUser, authUserProfile } = useAuth()
   const [taskMenuOpen, setTaskMenuOpen] = useState(true)
+  const [profileModalOpen, setProfileModalOpen] = useState(false)
 
   const isActive = (path) => {
     return pathname.split('/').pop() === path
@@ -58,6 +61,10 @@ const Sidebar = () => {
     setTaskMenuOpen(!taskMenuOpen)
   }
 
+  const handleCloseModal = () => {
+    setProfileModalOpen(false);
+  };
+
   const handleLogoutUser = () => {
     Swal.fire({
       title: "Are you sure?",
@@ -84,14 +91,18 @@ const Sidebar = () => {
             <RiMenu4Fill />
           </div>
         </div>
-        <div className="bg-gray-200 text-gray-800 dark:bg-neutral-800 dark:text-gray-200 py-3 px-2 mt-5 rounded-xl">
+        <div className="bg-gray-200 text-gray-800 dark:bg-neutral-800 dark:text-gray-200 py-3 px-2 mt-5 rounded-xl cursor-pointer" onClick={() => setProfileModalOpen(true)}>
           <div className="grid grid-cols-12 ">
             <div className="overflow-hidden col-span-3">
-              <img src="src\assets\heroimg.jpg" className="rounded-full w-11 h-11"></img>
+              <img
+                src={authUserProfile.image_url ? authUserProfile.image_url : 'src/assets/pp.webp'}
+                className="rounded-full w-11 h-11"
+                alt="Profile"
+              />
             </div>
             <div className="col-span-9">
-              <p className="text-md text-gray-900 dark:text-gray-200 font-semibold">Roman Humagain</p>
-              <p className="truncate text-sm text-gray-600 dark:text-neutral-400">romanhumagain@gmail.com</p>
+              <p className="text-md text-gray-900 dark:text-gray-200 font-semibold">{authUserProfile?.full_name}</p>
+              <p className="truncate text-sm text-gray-600 dark:text-neutral-400">{authUserProfile?.email}</p>
             </div>
           </div>
         </div>
@@ -143,6 +154,9 @@ const Sidebar = () => {
           </label>
         </div>
       </div>
+      {profileModalOpen && (
+        <ProfileModal isOpen={profileModalOpen} onClose={handleCloseModal} />
+      )}
     </>
   )
 }

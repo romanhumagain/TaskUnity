@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useEffect } from "react";
 import { IoSearch } from "react-icons/io5";
 import { IoIosNotifications } from "react-icons/io";
@@ -8,8 +9,13 @@ import { SlCalender } from "react-icons/sl";
 import { FaTasks } from "react-icons/fa";
 import { useTask } from "../context/TaskContext";
 import DashboardCard from "../components/dashboard/DashboardCard";
+import ProfileModal from "../components/modal/ProfileModal";
+import useAuthUser from "../hooks/useAuthUser";
+import { useAuth } from "../context/AuthContext";
 
 const Dashboard = () => {
+  const [profileModalOpen, setProfileModalOpen] = useState(false)
+  const user = useAuthUser()
   const {
     allTasks,
     fetchAllTask,
@@ -17,11 +23,9 @@ const Dashboard = () => {
     pendingTask,
     overdueTask,
     importantTask,
-    fetchImportantTask,
-    fetchOverdueTask,
-    fetchPendingTask,
-    fetchCompletedTask,
-    fetchTask } = useTask()
+  } = useTask()
+
+  const { authUserProfile } = useAuth()
 
   const incompleteTasks = pendingTask?.length;
   const totalTasks = tasksData?.length;
@@ -29,13 +33,13 @@ const Dashboard = () => {
   const pendingTasks = pendingTask?.length;
   const importantTasks = importantTask?.length
 
+  const handleCloseModal = () => {
+    setProfileModalOpen(false);
+  };
+
+
   useEffect(() => {
-    fetchTask()
     fetchAllTask()
-    fetchCompletedTask()
-    fetchPendingTask()
-    fetchOverdueTask()
-    fetchImportantTask()
   }, [])
 
   return (
@@ -57,16 +61,20 @@ const Dashboard = () => {
               </div>
               <div className="flex items-center gap-2">
                 <p className="text-2xl"><IoIosNotifications /></p>
-                <div className="grid grid-cols-12 items-center px-3 py-[2px] rounded-lg shadow-lg dark:bg-neutral-800 gap-3">
+
+                <div className="grid grid-cols-12 items-center px-3 py-[2px] rounded-lg shadow-lg dark:bg-neutral-800 gap-3 cursor-pointer" onClick={() => setProfileModalOpen(true)}>
                   <div className="overflow-hidden col-span-3">
-                    <img src="src\assets\heroimg.jpg" className="rounded-full w-10 h-10"></img>
+                    <img
+                      src={authUserProfile.image_url ? authUserProfile.image_url : 'src/assets/pp.webp'}
+                      className="rounded-full w-10 h-10"
+                      alt="Profile"
+                    />
                   </div>
 
                   <div className="col-span-9 ">
-                    <p className=" text-md font-semibold text-gray-700 dark:text-neutral-300">Roman Humagain</p>
+                    <p className=" text-md font-semibold text-gray-700 dark:text-neutral-300">{authUserProfile?.full_name}</p>
                     <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">User</p>
                   </div>
-
                 </div>
               </div>
             </div>
@@ -102,6 +110,9 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+      {profileModalOpen && (
+        <ProfileModal isOpen={profileModalOpen} onClose={handleCloseModal} />
+      )}
     </>
   )
 }

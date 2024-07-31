@@ -14,8 +14,7 @@ import TaskDetails from "./pages/Task/TaskDetails"
 
 function AppRoutes() {
   const {user} = useAuth()
-  console.log(user)
-
+  
   return (
     <>
       {user ? (
