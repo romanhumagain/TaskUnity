@@ -64,6 +64,7 @@ const login_user = async (req, res)=>{
     const payload = {
       user:{
         _id:user.id,
+        email:user.email
       }
     }
 

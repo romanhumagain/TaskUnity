@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 
 const taskSchema = new mongoose.Schema({
-
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -45,5 +44,5 @@ taskSchema.pre("save", async function (next) {
   next();
 });
 
-const Task = mongoose.model('task', taskSchema)
+const Task = mongoose.model('Task', taskSchema)
 module.exports = Task

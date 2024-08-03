@@ -247,6 +247,13 @@ const TaskContextProvider = ({ children }) => {
     setIsDeleted(false)
     setIsUpdated(false)
   }
+  const fetchALlCategoryTask = ()=>{
+    fetchTask()
+    fetchCompletedTask()
+    fetchPendingTask()
+    fetchOverdueTask()
+  }
+
 
   const context = {
     tasksData,
@@ -268,7 +275,8 @@ const TaskContextProvider = ({ children }) => {
     allTasks,
     fetchAllTask,
     fetchTaskDetails,
-    taskDetails
+    taskDetails,
+    fetchALlCategoryTask
   }
 
   return (

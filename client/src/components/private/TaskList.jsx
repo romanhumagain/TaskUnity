@@ -11,7 +11,7 @@ const TaskList = ({ data }) => {
   return (
     <>
       <Link to={`/task-details/${data._id}`}>
-        <div className="grid grid-cols-12 items-center mb-2 gap-4 border-b-2 pb-3 border-gray-200 dark:border-neutral-800 px-2">
+        <div className="grid grid-cols-12 items-center mb-2 gap-4 border-b-2 pb-3 border-gray-200 dark:border-neutral-800 px-2 ">
           <div className="col-span-1">
             {new Date(data.due_date) >= new Date() ? (
               data?.is_completed ? (
@@ -25,7 +25,7 @@ const TaskList = ({ data }) => {
 
           </div>
           <div className="col-span-10 ">
-            <p className={`truncate font-semibold text-gray-800 dark:text-neutral-300 ${new Date(data.due_date) < new Date() && 'line-through'}`}>{data?.title}</p>
+            <p className={`truncate font-semibold text-gray-800 dark:text-neutral-300 text-sm ${new Date(data.due_date) < new Date() && 'line-through'}`}>{data?.title}</p>
           </div>
           <div className="col-span-1">
             {data?.is_important ? (

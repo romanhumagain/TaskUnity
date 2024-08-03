@@ -12,6 +12,7 @@ import DashboardCard from "../components/dashboard/DashboardCard";
 import ProfileModal from "../components/modal/ProfileModal";
 import useAuthUser from "../hooks/useAuthUser";
 import { useAuth } from "../context/AuthContext";
+import { useWorkspace } from "../context/WorkspaceContext";
 
 const Dashboard = () => {
   const [profileModalOpen, setProfileModalOpen] = useState(false)
@@ -19,19 +20,11 @@ const Dashboard = () => {
   const {
     allTasks,
     fetchAllTask,
-    tasksData,
-    pendingTask,
-    overdueTask,
-    importantTask,
+    fetchALlCategoryTask
   } = useTask()
 
-  const { authUserProfile } = useAuth()
-
-  const incompleteTasks = pendingTask?.length;
-  const totalTasks = tasksData?.length;
-  const overdueTasks = overdueTask?.length;
-  const pendingTasks = pendingTask?.length;
-  const importantTasks = importantTask?.length
+  const { authUserProfile } = useAuth();
+  const {workspaceData} = useWorkspace();
 
   const handleCloseModal = () => {
     setProfileModalOpen(false);
@@ -40,14 +33,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchAllTask()
+    fetchALlCategoryTask()
   }, [])
 
   return (
     <>
-      <div className="min-h-screen w-full bg-gray-50 dark:bg-neutral-900 p-5">
-        <div className="max-w-6xl w-full bg-gray-50 dark:bg-neutral-900 min-h-screen mx-auto shadow-sm p-1 ">
-          <div className="text-gray-800 dark:text-neutral-400">
-            <div className="flex gap-10 justify-between w-full bg-gray-100 dark:bg-neutral-900 p-3 py-4 rounded-2xl shadow-xl">
+      <div className="min-h-screen w-full bg-gray-50 dark:bg-neutral-900 md:p-5">
+        <div className="md:max-w-6xl w-full bg-gray-50 dark:bg-neutral-900 min-h-screen mx-auto shadow-sm p-1 ">
+          <div className="text-gray-800 dark:text-neutral-400 ">
+            <div className="flex flex-wrap gap-10 justify-between w-full bg-gray-100 dark:bg-neutral-900 p-3 py-4 rounded-2xl shadow-xl">
               <div className="flex items-center gap-8 flex-grow">
                 <p className="text-xl text-gray-800 dark:text-neutral-300 font-bold">Dashboard</p>
                 <div className="relative w-1/2">
@@ -65,7 +59,7 @@ const Dashboard = () => {
                 <div className="grid grid-cols-12 items-center px-3 py-[2px] rounded-lg shadow-lg dark:bg-neutral-800 gap-3 cursor-pointer" onClick={() => setProfileModalOpen(true)}>
                   <div className="overflow-hidden col-span-3">
                     <img
-                      src={authUserProfile.image_url ? authUserProfile.image_url : 'src/assets/pp.webp'}
+                      src={authUserProfile?.image_url ? authUserProfile?.image_url : 'src/assets/pp.webp'}
                       className="rounded-full w-10 h-10"
                       alt="Profile"
                     />
@@ -78,21 +72,15 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-            <div>
-              <DashboardCard
-                incompleteTasks={incompleteTasks}
-                totalTasks={totalTasks}
-                overdueTasks={overdueTasks}
-                pendingTasks={pendingTasks}
-                importantTasks={importantTasks}
-              />
+            <div  className="">
+              <DashboardCard />
             </div>
 
-            <div className=" w-full p-3 py-4 mt-5 rounded-sm grid grid-cols-12 gap-5 ">
-              <div className="col-span-4">
+            <div className=" w-full p-3 py-4 mt-5 rounded-sm grid md:grid-cols-12 gap-5 ">
+              <div className="md:col-span-4">
                 <p className="font-semibold text-lg flex items-center gap-2 p-1"> <SiMicrosoftteams /> Recent Colloborative Project</p>
               </div>
-              <div className="col-span-4 shadow-xl p-2 rounded-xl">
+              <div className="md:col-span-4 shadow-xl p-2 rounded-xl">
                 <p className="font-semibold text-lg mb-4 p-1 flex items-center gap-2 "><FaTasks /> My Recent Task</p>
                 {allTasks && allTasks.map((data) => {
                   return (
@@ -102,7 +90,7 @@ const Dashboard = () => {
                   )
                 })}
               </div>
-              <div className="col-span-4 px-5 shadow-xl p-2 rounded-xl">
+              <div className="md:col-span-4 px-5 shadow-xl p-2 rounded-xl">
                 <p className="font-semibold text-lg flex items-center p-1 gap-2 "> <SlCalender />Calander</p>
                 <MyCalendar />
               </div>

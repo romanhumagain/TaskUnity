@@ -10,7 +10,8 @@ import OverdueTask from "./pages/Task/OverdueTask"
 import PendingTask from "./pages/Task/PendingTask"
 import ImportantTask from "./pages/Task/ImportantTask"
 import TaskDetails from "./pages/Task/TaskDetails"
-
+import WorkspaceDashboard from "./pages/workspace/WorkspaceDashboard"
+import VerifyWorkspace from "./pages/workspace/VerifyWorkspace"
 
 function AppRoutes() {
   const {user} = useAuth()
@@ -18,7 +19,7 @@ function AppRoutes() {
   return (
     <>
       {user ? (
-        <div className="min-h-screen grid grid-cols-12">
+        <div className="min-h-screen grid grid-cols-12 w-full bg-gray-50 dark:bg-neutral-900">
           <div className="col-span-2">
             <Sidebar />
           </div>
@@ -31,7 +32,8 @@ function AppRoutes() {
               <Route path="/overdue-task" element={<OverdueTask />} />
               <Route path="/important-task" element={<ImportantTask />} />
               <Route path="/task-details/:id" element={<TaskDetails />} />
-
+              <Route path="/workspace/:id" element={<WorkspaceDashboard />} />
+              <Route path="/verify-workspace/:workspace_id/:invitation_id" element={<VerifyWorkspace />} />
             </Routes>
           </div>
         </div>
