@@ -13,9 +13,13 @@ import ProfileModal from "../components/modal/ProfileModal";
 import useAuthUser from "../hooks/useAuthUser";
 import { useAuth } from "../context/AuthContext";
 import { useWorkspace } from "../context/WorkspaceContext";
+import NotificationModal from "../components/modal/NotificationModal";
+import WorkspaceList from "../components/private/WorkspaceList";
 
 const Dashboard = () => {
   const [profileModalOpen, setProfileModalOpen] = useState(false)
+  const [notificationModalOpen, setNotificationModalOpen] = useState(false)
+
   const user = useAuthUser()
   const {
     allTasks,
@@ -24,16 +28,19 @@ const Dashboard = () => {
   } = useTask()
 
   const { authUserProfile } = useAuth();
-  const {workspaceData} = useWorkspace();
+  const { workspaceData, get_workspace, get_unread_notification, unreadNotification } = useWorkspace();
 
   const handleCloseModal = () => {
     setProfileModalOpen(false);
+    setNotificationModalOpen(false);
   };
 
 
   useEffect(() => {
+    get_unread_notification()
     fetchAllTask()
     fetchALlCategoryTask()
+    get_workspace()
   }, [])
 
   return (
@@ -54,7 +61,19 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <p className="text-2xl"><IoIosNotifications /></p>
+                <div className="relative inline-flex items-center">
+                  <p
+                    className="text-3xl cursor-pointer"
+                    onClick={() => setNotificationModalOpen(true)}
+                  >
+                    <IoIosNotifications />
+                    {unreadNotification > 0 && (
+                      <span className="absolute top-0 right-0  w-4 h-4 text-xs font-medium text-white bg-red-500 rounded-full flex items-center justify-center">
+                        {unreadNotification}
+                      </span>
+                    )}
+                  </p>
+                </div>
 
                 <div className="grid grid-cols-12 items-center px-3 py-[2px] rounded-lg shadow-lg dark:bg-neutral-800 gap-3 cursor-pointer" onClick={() => setProfileModalOpen(true)}>
                   <div className="overflow-hidden col-span-3">
@@ -72,23 +91,45 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-            <div  className="">
+            <div className="">
               <DashboardCard />
             </div>
 
             <div className=" w-full p-3 py-4 mt-5 rounded-sm grid md:grid-cols-12 gap-5 ">
-              <div className="md:col-span-4">
-                <p className="font-semibold text-lg flex items-center gap-2 p-1"> <SiMicrosoftteams /> Recent Colloborative Project</p>
+              <div className="md:col-span-4 ">
+                <p className="font-semibold text-lg flex items-center gap-2 p-1 mb-4"> <SiMicrosoftteams /> Recent Colloborative Project</p>
+
+                <div className="shadow-xl p-2 rounded-xl ">
+                  {workspaceData && workspaceData.length > 0 ? workspaceData.map((data) => {
+                    return (
+                      <div key={data._id}>
+                        <WorkspaceList data={data} />
+                      </div>
+                    )
+                  }) : (
+                    <p class="text-md font-semibold text-gray-500 dark:text-neutral-400 p-2  rounded shadow-sm">
+                      No Workspace Available !
+                    </p>
+                  )}
+                </div>
               </div>
-              <div className="md:col-span-4 shadow-xl p-2 rounded-xl">
+              <div className="md:col-span-4 ">
                 <p className="font-semibold text-lg mb-4 p-1 flex items-center gap-2 "><FaTasks /> My Recent Task</p>
-                {allTasks && allTasks.map((data) => {
-                  return (
-                    <div key={data._id}>
-                      <TaskList data={data} />
-                    </div>
-                  )
-                })}
+                <div className="shadow-xl p-2 rounded-xl ">
+                  {allTasks && allTasks.length > 0 ? allTasks.map((data) => {
+                    return (
+                      <div key={data._id}>
+                        <TaskList data={data} />
+                      </div>
+                    )
+                  }) : (
+
+                    <p class="text-md font-semibold text-gray-500 dark:text-neutral-400 p-2  rounded shadow-sm">
+                      No Tasks Available !
+                    </p>
+
+                  )}
+                </div>
               </div>
               <div className="md:col-span-4 px-5 shadow-xl p-2 rounded-xl">
                 <p className="font-semibold text-lg flex items-center p-1 gap-2 "> <SlCalender />Calander</p>
@@ -100,6 +141,9 @@ const Dashboard = () => {
       </div>
       {profileModalOpen && (
         <ProfileModal isOpen={profileModalOpen} onClose={handleCloseModal} />
+      )}
+      {notificationModalOpen && (
+        <NotificationModal isOpen={notificationModalOpen} onClose={handleCloseModal} />
       )}
     </>
   )

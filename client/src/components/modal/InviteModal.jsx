@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
 import { FaUserCircle, FaTimes, FaUsers } from "react-icons/fa";
 import loadingGif from '../../assets/loading.gif'
+import { useWorkspace } from '../../context/WorkspaceContext';
 
 const InviteModal = ({ isOpen, onClose, workspace_id }) => {
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
@@ -12,6 +13,7 @@ const InviteModal = ({ isOpen, onClose, workspace_id }) => {
   const [emails, setEmails] = useState([]);
   const [emailError, setEmailError] = useState('');
   const axiosInstance = createAxiosInstance();
+  const {setIsInvited} = useWorkspace()
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -69,6 +71,7 @@ const InviteModal = ({ isOpen, onClose, workspace_id }) => {
           setEmails([]);
           closeModal();
           toast.success('Invitations sent successfully!');
+          setIsInvited(true)
         }
       } catch (error) {
         setLoading(false)

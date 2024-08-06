@@ -32,6 +32,7 @@ const Sidebar = () => {
   const pathname = location.pathname
   const { logoutUser, authUserProfile } = useAuth()
   const [taskMenuOpen, setTaskMenuOpen] = useState(true)
+  const [workspaceMenuOpen, setWorkspaceMenuOpen] = useState(true)
   const [profileModalOpen, setProfileModalOpen] = useState(false)
   const [workspaceModalOpen, setWorkspaceModalOpen] = useState(false)
   const [isSideBarOpen, setIsSideBarOpen] = useState(true)
@@ -68,6 +69,10 @@ const Sidebar = () => {
 
   const handleTaskMenu = () => {
     setTaskMenuOpen(!taskMenuOpen)
+  }
+
+  const handleWorkspaceMenu = () => {
+    setWorkspaceMenuOpen(!workspaceMenuOpen)
   }
 
   const handleCloseModal = () => {
@@ -112,7 +117,7 @@ const Sidebar = () => {
           <div className="grid grid-cols-12 ">
             <div className={`overflow-hidden  ${isSideBarOpen ? 'col-span-3' : 'col-span-12 mx-auto'}`}>
               <img
-                src={authUserProfile.image_url ? authUserProfile?.image_url : 'src/assets/pp.webp'}
+                src={authUserProfile?.image_url ? authUserProfile?.image_url : 'src/assets/pp.webp'}
                 className={`rounded-full ${isSideBarOpen ? 'w-11 h-11' : 'w-8 h-8'}`}
                 alt="Profile"
               />
@@ -175,18 +180,21 @@ const Sidebar = () => {
         <div className="px-5">
           <p className={`font-medium mt-2 text-gray-600 dark:text-neutral-400 ${isSideBarOpen ? 'text-[13px]' : 'text-[8px]'}`}>Team Space</p>
           <div className="mt-4 flex gap-1 items-center">
-            <MdKeyboardArrowDown className={`text-xl cursor-pointer ${isSideBarOpen ? '' : 'justify-center'}`} onClick={handleTaskMenu} />
-
+          {workspaceMenuOpen ? (
+                <MdKeyboardArrowDown className={`text-xl cursor-pointer ${isSideBarOpen ? '' : 'justify-center'}`} onClick={handleWorkspaceMenu} />
+              ) : (
+                <MdKeyboardArrowRight className={`text-xl cursor-pointer ${isSideBarOpen ? '' : 'justify-center'}`} onClick={handleWorkspaceMenu} />
+              )}
             <p title="New Workspace" className={`flex items-center gap-1 p-[2px] rounded-md ${isSideBarOpen ? '' : 'text-xl justify-center'}`}>
               <IoMdAdd />
-              <span className={`font-semibold text-md text-gray-900 dark:text-neutral-300 hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300 ${isSideBarOpen ? '' : 'hidden'}`} onClick={() => setWorkspaceModalOpen(true)}>New Workspace</span>
+              <span className={`font-semibold text-md text-gray-900 dark:text-neutral-300 hover:bg-gray-200 dark:hover:bg-neutral-800 duration-300 ${isSideBarOpen ? '' : 'hidden'} cursor-pointer`} onClick={() => setWorkspaceModalOpen(true)}>New Workspace</span>
             </p>
           </div>
           <div>
-            <div className="ml-5 my-3">
+            <div className={ `${!workspaceMenuOpen && 'hidden'} ml-5 my-3`}>
               {workspaceData && workspaceData.map((data) => {
                 return (
-                  <div key={data.id}  className="flex items-center gap-1 font-semibold px-[10px] cursor-pointer mb-2" onClick={()=>navigate(`/workspace/${data._id}`)}>
+                  <div key={data.id}  className="flex items-center gap-1 px-[10px] cursor-pointer mb-2" onClick={()=>navigate(`/workspace/${data._id}`)}>
                   <BsPersonWorkspace />
                     <p title="Workspace1" className={`  rounded-md ${isSideBarOpen ? '' : 'text-xl justify-center'} truncate`}>
                       

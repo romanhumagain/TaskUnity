@@ -22,7 +22,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 app.use('/api', require('./src/routes/userRoutes'));
 app.use('/api/tasks', require('./src/routes/taskRoutes'));
 app.use('/api/profile', require('./src/routes/profileRoutes'))
-app.use('/api/workspace',require('./src/routes/workspaceRoutes') )
+app.use('/api/workspace',require('./src/routes/workspaceRoutes'))
+app.use('/api/notification', require('./src/routes/notificationRoutes'))
 
 app.listen(PORT, ()=>{
   console.log(`Server is running on port ${PORT}`);

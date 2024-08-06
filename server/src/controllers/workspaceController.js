@@ -1,6 +1,8 @@
 const { Workspace, Membership, Invitation } = require('../models/workspaceModel');
 const { sendMail } = require('../../sendMail')
 const { v4: uuidv4 } = require('uuid');
+const Notification = require('../models/notificationModel')
+const User = require('../models/userModels')
 
 const sendErrorResponse = (res, error) => {
   console.log(error);
@@ -10,7 +12,7 @@ const sendErrorResponse = (res, error) => {
 // to get the users workspace
 const get_workspace = async (req, res) => {
   try {
-    const workspaces = await Workspace.find({ users: req.user._id }).sort({ createdAt: -1 });
+    const workspaces = await Workspace.find({ users: req.user._id }).populate('users').sort({ createdAt: -1 });
     if (!workspaces || workspaces.length === 0) {
       return res.status(404).json({ msg: 'No workspaces found for this user' });
     }
@@ -38,7 +40,7 @@ const create_workspace = async (req, res) => {
   try {
     const { name, description, priority } = req.body;
     const workspace = new Workspace({
-      name, description, priority, users: [req.user._id]
+      name, description, priority, users: [req.user._id], created_by: req.user._id
     })
     await workspace.save();
 
@@ -64,9 +66,15 @@ const invite_users = async (req, res) => {
   try {
     const { workspace, emails } = req.body;
 
+    // Find the workspace
+    const workspace_data = await Workspace.findById(workspace);
+    if (!workspace_data) {
+      return res.status(404).json({ message: 'Workspace not found!' });
+    }
+
     for (let i = 0; i < emails.length; i++) {
       let inviteLinkId = uuidv4();
-      
+
       // Ensure unique link_id for each invitation
       while (await Invitation.findOne({ link_id: inviteLinkId })) {
         inviteLinkId = uuidv4();
@@ -80,6 +88,15 @@ const invite_users = async (req, res) => {
         expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000),
       });
       await invitation.save();
+
+      // to send notification
+      const user = await User.findOne({ email: emails[i] });
+
+      if (user) {
+        const description = `🎉You've been invited to join a new workspace, ${workspace_data.name} !`
+        const notification = new Notification({ description, receiver: user._id });
+        await notification.save();
+      };
 
       const invitedLink = `http://localhost:5173/verify-workspace/${workspace}/${inviteLinkId}/`;
 
@@ -165,6 +182,14 @@ const add_membership = async (req, res) => {
       { new: true }
     );
 
+    // to send notification to the inviter
+    const description = `🤝${req.user.full_name} has accepted your invitation to join the ${updated_workspace.name} workspace.`;
+    const notification = new Notification({
+      description,
+      receiver: invitation.inviter
+    });
+    await notification.save();
+
     res.status(200).json({ message: 'Successfully verified! You are now a member of this workspace!' });
 
   } catch (error) {
@@ -172,5 +197,83 @@ const add_membership = async (req, res) => {
   }
 };
 
+const get_workspace_users = async (req, res) => {
+  try {
+    const { workspace_id } = req.params
+    const membership_user = await Membership.find({ workspace: workspace_id }).populate({ path: 'user' }).sort({ role: 1 })
+    const pending_member = await Invitation.find({ workspace: workspace_id, status: 'pending' })
 
-module.exports = { get_workspace, create_workspace, get_workspace_details, invite_users, verify_invited_user, add_membership }
+    res.status(200).json({ verified_member: membership_user, pending_member: pending_member })
+  } catch (error) {
+    sendErrorResponse(res, error)
+  }
+}
+
+const remove_invitation = async (req, res) => {
+  try {
+    const { id } = req.params
+    await Invitation.findByIdAndDelete(id)
+    res.status(200).json({ message: 'Successfully removed invitation !' })
+
+  } catch (error) {
+    sendErrorResponse(res, error)
+  }
+}
+
+const delete_workspace = async (req, res) => {
+  try {
+    const { workspace_id } = req.params;
+    console.log(workspace_id)
+
+    // Find and delete the workspace
+    const workspace = await Workspace.findByIdAndDelete(workspace_id);
+    if (!workspace) {
+      return res.status(404).json({ msg: 'Workspace not found!' });
+    }
+
+    // Delete invitations related to the workspace
+    await Invitation.deleteMany({ workspace: workspace_id });
+
+    // Delete memberships related to the workspace
+    await Membership.deleteMany({ workspace: workspace_id });
+
+    res.status(200).json({ message: 'Workspace and related data successfully deleted' });
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
+};
+
+const verify_workspace = async (req, res) => {
+  try {
+    const { workspace_id } = req.params;
+
+    const workspace = await Workspace.findOne({
+      _id: workspace_id,
+      users: req.user._id
+    });
+
+    if (!workspace) {
+      return res.status(401).json({ msg: 'Unauthorized access to workspace!' });
+    }
+
+    res.status(200).json({ msg: 'User authenticated for the workspace.' });
+
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
+};
+
+
+
+module.exports = {
+  get_workspace,
+  create_workspace,
+  get_workspace_details,
+  invite_users,
+  verify_invited_user,
+  add_membership,
+  get_workspace_users,
+  remove_invitation,
+  delete_workspace,
+  verify_workspace
+}

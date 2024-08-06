@@ -5,8 +5,7 @@ import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import { HiArrowRight } from 'react-icons/hi';
 import { HiLink } from 'react-icons/hi';
 import toast from 'react-hot-toast';
-
-
+import { useWorkspace } from '../../context/WorkspaceContext';
 
 const VerifyWorkspace = () => {
   const [isVerified, setIsVerified] = useState(false)
@@ -16,6 +15,7 @@ const VerifyWorkspace = () => {
   const invitation_id = params.invitation_id
   const navigate = useNavigate()
   const axiosInstance = createAxiosInstance()
+  const {setWorkspaceVerified} = useWorkspace();
 
 
   const verify_invited_user = async () => {
@@ -45,6 +45,7 @@ const VerifyWorkspace = () => {
       if (response.status === 200) {
         setAddedMembership(true)
         toast.success('Congratulations ! You are now the member of this Workspace');
+        setWorkspaceVerified(true)
       }
 
     } catch (error) {

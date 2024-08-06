@@ -19,6 +19,10 @@ const workspaceSchema = new mongoose.Schema({
       ref: 'User'
     }
   ],
+  created_by: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
 }, { timestamps: true });
 
 // Membership Schema 
