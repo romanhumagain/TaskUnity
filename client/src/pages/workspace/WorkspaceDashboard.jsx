@@ -22,6 +22,9 @@ import { FaEdit } from "react-icons/fa";
 import Swal from 'sweetalert2';
 import PageNotFound from '../../components/PageNotFound';
 import Popover from '../../components/Popover';
+import WorkspaceAddTaskModal from '../../components/modal/WorkspaceAddTaskModal';
+import WorkspaceMessageModal from '../../components/modal/WorkspaceMessageModal';
+import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 
 const WorkspaceDashboard = () => {
   const params = useParams()
@@ -36,9 +39,12 @@ const WorkspaceDashboard = () => {
   const { logoutUser, user } = useAuth()
   const { isInvited, setIsInvited, delete_workspace } = useWorkspace()
   const [hoveredUser, setHoveredUser] = useState(null);
+  const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false)
 
-
-
+  const handleAddTaskModal = () => {
+    setIsAddTaskModalOpen(true);
+  };
   const verify_workspace = async () => {
     try {
       const response = await axiosInstance.delete(`workspace/verify/${_id}/`);
@@ -106,7 +112,16 @@ const WorkspaceDashboard = () => {
   }
 
   const handleCloseModal = () => {
-    setInviteModalOpen(false);
+    if (inviteModalOpen) {
+      setInviteModalOpen(false);
+    }
+
+    if (isAddTaskModalOpen) {
+      setIsAddTaskModalOpen(false);
+    }
+    if (isChatModalOpen) {
+      setIsChatModalOpen(false);
+    }
   };
 
   const handleDeleteWorkspace = (workspace_id) => {
@@ -124,7 +139,6 @@ const WorkspaceDashboard = () => {
       }
     });
   }
-
 
   const bg_colors = [
     "red", "teal", "sky", "rose", "purple", "yellow"
@@ -151,7 +165,10 @@ const WorkspaceDashboard = () => {
     isAuthorizedUser ? (
       <div className='min-h-screen w-full bg-gray-100 dark:bg-neutral-900 flex justify-center'>
         <div className='max-w-6xl w-full bg-gray-100 dark:bg-neutral-900'>
-          <div className='bg-red-500 w-full mt-10 h-52 relative rounded-lg'>
+          <div className=' w-full mt-10 h-52 relative rounded-lg mb-10'>
+            <div className='flex justify-end'>
+              <p className='mb-5 text-2xl hover:scale-110 transition-transform duration-700 text-neutral-800 dark:text-neutral-200 cursor-pointer ' onClick={() => setIsChatModalOpen(true)}><IoChatbubbleEllipsesSharp /></p>
+            </div>
             <div className='overflow-hidden'>
               <img src={projectCover} alt='Project Cover' className='h-52 w-full object-cover rounded-lg' />
             </div>
@@ -160,7 +177,7 @@ const WorkspaceDashboard = () => {
               <p className='font-semibold'>{workspaceDetails?.name}</p>
             </div>
           </div>
-          <div className='grid grid-cols-12 items-center mt-10 gap-9'>
+          <div className='grid grid-cols-12 items-center mt-16 gap-9'>
             <div className='p-2 text-md text-gray-700 font-semibold dark:text-neutral-400 col-span-9'>
               <p>{workspaceDetails?.description}</p>
             </div>
@@ -185,8 +202,8 @@ const WorkspaceDashboard = () => {
 
           <div className='grid grid-cols-12 p-2 mt-5'>
             <div className='col-span-8'>
-              <div className='flex flex-wrap gap-10'>
-                <div className="bg-gray-200 dark:bg-neutral-800 max-w-[300px] w-full min-h-64 rounded-2xl flex items-center justify-center shadow-xl cursor-pointer">
+              <div className={`${workspaceDetails?.created_by === user._id ? '' : 'hidden'} flex flex-wrap gap-10`} >
+                <div className="bg-gray-200 dark:bg-neutral-800 max-w-[300px] w-full min-h-64 rounded-2xl flex items-center justify-center shadow-xl cursor-pointer" onClick={() => setIsAddTaskModalOpen(true)}>
                   <p className="flex items-center gap-2 text-neutral-800 dark:text-gray-200">
                     <IoMdAddCircleOutline className="text-3xl" />
                     <p className="text-lg">Add new Task</p>
@@ -279,6 +296,12 @@ const WorkspaceDashboard = () => {
         </div>
         {inviteModalOpen && (
           <InviteModal isOpen={inviteModalOpen} onClose={handleCloseModal} workspace_id={_id} />
+        )}
+        {isAddTaskModalOpen && (
+          <WorkspaceAddTaskModal isOpen={isAddTaskModalOpen} onClose={handleCloseModal} verifiedMember={verifiedMember} workspace_id={_id} />
+        )}
+        {isChatModalOpen && (
+          <WorkspaceMessageModal isOpen={isChatModalOpen} onClose={handleCloseModal} />
         )}
         <Toaster />
       </div>

@@ -10,7 +10,7 @@ const NotificationModal = ({ isOpen, onClose }) => {
   const axiosInstance = createAxiosInstance()
   const [notificationData, setNotificationData] = useState(null)
   const { logoutUser } = useAuth()
-  const {mark_all_notification_read} = useWorkspace()
+  const { mark_all_notification_read } = useWorkspace()
 
   const get_notification = async () => {
     try {
@@ -81,16 +81,14 @@ const NotificationModal = ({ isOpen, onClose }) => {
 
             <div className="rounded-lg  mt-6 space-y-2 ">
               {notificationData && notificationData.map((data) => (
-                <div key={data._id} className= {`${data.is_read?'bg-gray-200 dark:bg-neutral-700':'bg-gray-300 dark:bg-neutral-800'} p-2 border border-gray-200 dark:border-neutral-600 rounded-lg flex flex-col space-y-2 shadow-md`}>
+                <div key={data._id} className={`${data.is_read ? 'bg-gray-200 dark:bg-neutral-800' : 'bg-gray-300 dark:bg-neutral-700'} p-2 border border-gray-200 dark:border-neutral-600 rounded-lg flex flex-col space-y-2 shadow-md`}>
                   <p className="text-gray-800 dark:text-neutral-200 font-medium">{data.description}</p>
                   <p className="text-sm text-gray-500 dark:text-neutral-500">
                     {formatDistanceToNow(new Date(data.createdAt), { addSuffix: true })}
                   </p>
                 </div>
               ))}
-
             </div>
-
           </div>
         </div>
       </div>

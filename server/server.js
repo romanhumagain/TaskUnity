@@ -24,6 +24,10 @@ app.use('/api/tasks', require('./src/routes/taskRoutes'));
 app.use('/api/profile', require('./src/routes/profileRoutes'))
 app.use('/api/workspace',require('./src/routes/workspaceRoutes'))
 app.use('/api/notification', require('./src/routes/notificationRoutes'))
+app.use('/api/workspace/task',require('./src/routes/workspaceTaskRoutes'))
+app.use('/api/workspace/message',require('./src/routes/workspaceMessageRoutes'))
+
+
 
 app.listen(PORT, ()=>{
   console.log(`Server is running on port ${PORT}`);
