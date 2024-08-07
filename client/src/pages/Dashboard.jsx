@@ -57,7 +57,7 @@ const Dashboard = () => {
                     type="text"
                     id="title"
                   />
-                  <IoSearch className="absolute left-3 top-1/2  -translate-y-1/2 text-gray-600 dark:text-gray-300" />
+                  <IoSearch className="absolute left-3 top-1/2  -translate-y-1/2 text-gray-600 dark:text-gray-200" />
                 </div>
               </div>
               <div className="flex items-center gap-2">

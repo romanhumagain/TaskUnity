@@ -1,4 +1,5 @@
 const Profile = require("../models/userProfileModel");
+const {Membership } = require("../models/workspaceModel");
 
 const domain = "http://localhost:3000";
 
@@ -14,6 +15,23 @@ const getProfileDetails = async (req, res) => {
       return res.status(404).json({ msg: "Profile not found" });
     }
     res.status(200).json({ profile });
+  } catch (error) {
+    sendErrorResponse(res, error)
+  }
+}
+
+const fetch_specific_user_profile = async(req, res)=>{
+  try {
+    const {user_id, workspace_id} = req.params
+    const profile = await Profile.findOne({ user: user_id}).populate("user", ['full_name', "username", "email"]);
+    if (!profile) {
+      return res.status(404).json({ msg: "Profile not found" });
+    }
+    const membership = await Membership.findOne({user:user_id, workspace:workspace_id})
+    if (!membership) {
+      return res.status(404).json({ msg: "Membership not found" });
+    }
+    res.status(200).json({ profile, membership });
   } catch (error) {
     sendErrorResponse(res, error)
   }
@@ -42,4 +60,4 @@ const update_profile = async (req, res) => {
   }
 };
 
-module.exports = { getProfileDetails,update_profile };
+module.exports = { getProfileDetails,update_profile, fetch_specific_user_profile };

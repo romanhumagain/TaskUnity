@@ -21,6 +21,7 @@ import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import Swal from 'sweetalert2';
 import PageNotFound from '../../components/PageNotFound';
+import Popover from '../../components/Popover';
 
 const WorkspaceDashboard = () => {
   const params = useParams()
@@ -34,6 +35,9 @@ const WorkspaceDashboard = () => {
   const [removedInvitation, setRemovedInvitation] = useState(false)
   const { logoutUser, user } = useAuth()
   const { isInvited, setIsInvited, delete_workspace } = useWorkspace()
+  const [hoveredUser, setHoveredUser] = useState(null);
+
+
 
   const verify_workspace = async () => {
     try {
@@ -202,9 +206,20 @@ const WorkspaceDashboard = () => {
                     verifiedMember.map((data, i) => (
                       <div key={data._id} className='grid grid-cols-12 mb-2 items-center text-neutral-700 dark:text-neutral-400 gap-5'>
                         <div className='col-span-1'>
-                          <p className={`p-[3px] text-sm font-semibold text-white inline bg-${bg_colors[i]}-500 rounded-full`}>
-                            {data.user.full_name.split(' ')[0].charAt(0)}{data.user.full_name.split(' ')[1].charAt(0)}
-                          </p>
+                          <div className='relative'>
+
+
+                            <p className={`p-[3px] text-sm font-semibold text-white inline bg-${bg_colors[i]}-500 rounded-full cursor-pointer`}
+                              onMouseEnter={() => setHoveredUser(data.user._id)}
+                              onMouseLeave={() => setHoveredUser(null)}>
+                              {data.user.full_name.split(' ')[0].charAt(0)}{data.user.full_name.split(' ')[1].charAt(0)}
+                            </p>
+
+                            {hoveredUser === data.user._id && (
+                              <Popover user_id={data.user._id} workspace_id={_id} />
+                            )}
+                          </div>
+
                         </div>
                         <div className='col-span-7'>
                           <p>{data.user.full_name}</p>
@@ -247,7 +262,7 @@ const WorkspaceDashboard = () => {
                               <p
                                 className='text-red-500 text-md hover:text-red-700 transition-colors duration-300 cursor-pointer'
                                 aria-label='Remove user'
-                                onClick={() => removeInvitation(data._id)}
+                                onClick={() => remove_invitation(data._id)}
                               >
                                 <FaUserSlash />
                               </p>

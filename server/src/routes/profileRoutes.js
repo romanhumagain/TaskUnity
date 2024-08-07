@@ -6,5 +6,7 @@ const auth = require('../middlewares/authMiddlewares');
 
 router.get('/', auth, profileController.getProfileDetails);
 router.put('/update', auth, profileImage.single('profileImage'), profileController.update_profile);
+router.get('/:user_id/:workspace_id', auth, profileController.fetch_specific_user_profile);
+
 
 module.exports = router;

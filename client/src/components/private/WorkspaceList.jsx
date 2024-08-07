@@ -12,19 +12,22 @@ import WorkspaceMemberList from '../dashboard/WorkspaceMemberList';
 const WorkspaceList = ({ data }) => {
   return (
     <>
-      <Link to={`/workspace/${data._id}`}>
+      
         <div className="grid grid-cols-12 items-center mb-2 gap-4 border-b-2 pb-3 border-neutral-200 dark:border-neutral-800 px-2 ">
+        
           <div className="col-span-1">
             {data.priority === "high" ? (<FcHighPriority />) : data.priority === "medium" ? (<FcMediumPriority />) : data.priority === "low" ? (<FcLowPriority />) : null}
           </div>
-          <div className="col-span-8 ">
+          <Link className='col-span-8' to={`/workspace/${data._id}`}>
+          <div className="">
             <p className={`font-semibold text-gray-800 dark:text-neutral-300 text-sm`}>{data?.name}</p>
           </div>
+          </Link>
           <div className="col-span-3">
-            <WorkspaceMemberList users={data.users} />
+            <WorkspaceMemberList users={data.users} workspace_id = {data._id}/>
           </div>
         </div>
-      </Link>
+      
     </>
   )
 }
