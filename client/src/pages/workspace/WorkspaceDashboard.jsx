@@ -26,6 +26,8 @@ import WorkspaceAddTaskModal from '../../components/modal/WorkspaceAddTaskModal'
 import WorkspaceMessageModal from '../../components/modal/WorkspaceMessageModal';
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 import { useWorkspaceChat } from '../../context/WorkspaceChatContext';
+import TaskList from '../../components/workspace/TaskList';
+import { IoAddOutline } from "react-icons/io5";
 
 const WorkspaceDashboard = () => {
   const params = useParams()
@@ -44,7 +46,7 @@ const WorkspaceDashboard = () => {
   const [isChatModalOpen, setIsChatModalOpen] = useState(false)
   const [workspaceName, setworkspaceName] = useState(null)
 
-  const {get_unread_message, unreadMessage} = useWorkspaceChat()
+  const { get_unread_message, unreadMessage } = useWorkspaceChat()
 
   const handleAddTaskModal = () => {
     setIsAddTaskModalOpen(true);
@@ -171,23 +173,49 @@ const WorkspaceDashboard = () => {
     isAuthorizedUser ? (
       <div className='min-h-screen w-full bg-gray-100 dark:bg-neutral-900 flex justify-center'>
         <div className='max-w-6xl w-full bg-gray-100 dark:bg-neutral-900'>
-          <div className=' w-full mt-10 h-52 relative rounded-lg mb-10'>
-            <div className='flex justify-end'>
-            <div className="relative inline-flex items-center">
-                  <p
-                    className="text-3xl cursor-pointer"
-                    onClick={() => setIsChatModalOpen(true)}
-                  >
-                    <IoChatbubbleEllipsesSharp />
-                    {unreadMessage > 0 && (
-                      <span className="absolute -top-2 -right-2  w-5 h-5 text-xs font-medium text-white bg-red-500 rounded-full flex items-center justify-center">
-                        {unreadMessage}
-                      </span>
-                    )}
-                  </p>
-                </div>
+          <div className='bg-gradient-to-r from-gray-200 via-gray-300 to-gray-400 dark:from-neutral-800 dark:to-neutral-900 p-3 flex items-center justify-end shadow-lg'>
+            <div className='flex items-center  gap-6'>
+              <button
+                className='text-md font-semibold p-1 px-4 bg-neutral-900 text-white border-2 border-neutral-600 dark:bg-gray-200 dark:text-black dark:border-gray-500 dark:hover:bg-gray-300 rounded-full transition-transform transform hover:scale-105 flex items-center gap-2 duration-500'
+                onClick={() => setIsAddTaskModalOpen(true)}
+              >
+                <IoAddOutline className='text-xl' /> Add Task
+              </button>
 
+              {workspaceDetails?.created_by === user._id && (
+                <div className='text-neutral-800 dark:text-gray-200'>
+                  <div className='flex gap-4'>
+                    <p className='text-2xl cursor-pointer hover:text-gray-600 dark:hover:text-gray-300 hover:scale-110 duration-500'>
+                      <FaEdit />
+                    </p>
+                    <p
+                      className='text-2xl cursor-pointer hover:text-red-600 hover:scale-110 duration-500'
+                      onClick={() => handleDeleteWorkspace(workspaceDetails._id)}
+                    >
+                      <MdDelete />
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="relative">
+                <p
+                  className="text-2xl text-neutral-800 dark:text-gray-200 cursor-pointer hover:text-sky-700 hover:scale-110 duration-500"
+                  onClick={() => setIsChatModalOpen(true)}
+                >
+                  <IoChatbubbleEllipsesSharp />
+                  {unreadMessage > 0 && (
+                    <span className="absolute -top-2 -right-2 w-5 h-5 text-xs font-medium text-white rounded-full flex items-center justify-center bg-red-600">
+                      {unreadMessage}
+                    </span>
+                  )}
+                </p>
               </div>
+            </div>
+          </div>
+
+
+          <div className=' w-full h-52 relative rounded-md mb-10'>
             <div className='overflow-hidden'>
               <img src={projectCover} alt='Project Cover' className='h-52 w-full object-cover rounded-lg' />
             </div>
@@ -200,7 +228,7 @@ const WorkspaceDashboard = () => {
             <div className='p-2 text-md text-gray-700 font-semibold dark:text-neutral-400 col-span-9'>
               <p>{workspaceDetails?.description}</p>
             </div>
-            <div className='col-span-2 flex justify-end'>
+            <div className='col-span-3 flex justify-end px-4'>
               <button
                 className='text-md font-semibold p-1 px-2 bg-neutral-900 text-white border-2 border-neutral-600 hover:bg-neutral-700 dark:bg-gray-200 dark:text-black/95 dark:border-gray-500 dark:hover:bg-gray-300 rounded-2xl duration-500 flex items-center gap-2'
                 onClick={() => setInviteModalOpen(true)}
@@ -208,33 +236,20 @@ const WorkspaceDashboard = () => {
                 <FaEnvelopeOpenText /> Invite People
               </button>
             </div>
-
-            {workspaceDetails?.created_by === user._id && (
-              <div className='col-span-1 flex justify-end'>
-                <div className='flex gap-1 px-5'>
-                  <p className='text-teal-600 text-[22px] cursor-pointer'><FaEdit /></p>
-                  <p className='text-rose-500 text-2xl cursor-pointer' onClick={() => handleDeleteWorkspace(workspaceDetails._id)}><MdDelete /></p>
-                </div>
-              </div>
-            )}
           </div>
 
           <div className='grid grid-cols-12 p-2 mt-5'>
-            <div className='col-span-8'>
-              <div className={`${workspaceDetails?.created_by === user._id ? '' : 'hidden'} flex flex-wrap gap-10`} >
-                <div className="bg-gray-200 dark:bg-neutral-800 max-w-[300px] w-full min-h-64 rounded-2xl flex items-center justify-center shadow-xl cursor-pointer" onClick={() => setIsAddTaskModalOpen(true)}>
-                  <p className="flex items-center gap-2 text-neutral-800 dark:text-gray-200">
-                    <IoMdAddCircleOutline className="text-3xl" />
-                    <p className="text-lg">Add new Task</p>
-                  </p>
-                </div>
-              </div>
+
+            <div className='col-span-9 flex gap-5'>
+              <TaskList />
+              <TaskList />
+
             </div>
 
-            <div className='col-span-4'>
+            <div className='col-span-3'>
               <div className='shadow-lg rounded-lg p-4'>
                 <p className='font-semibold text-[17px] mb-2 flex items-center gap-2 text-neutral-800 dark:text-neutral-200'>
-                  <MdVerifiedUser className='text-xl text-green-500' /> Verified Member
+                  <MdVerifiedUser className='text-lg text-green-500' /> Verified Member
                 </p>
                 <hr className='border border-neutral-300 dark:border-neutral-700 mb-2' />
                 <div>
@@ -243,31 +258,28 @@ const WorkspaceDashboard = () => {
                       <div key={data._id} className='grid grid-cols-12 mb-2 items-center text-neutral-700 dark:text-neutral-400 gap-5'>
                         <div className='col-span-1'>
                           <div className='relative'>
-
-
-                            <p className={`p-[3px] text-sm font-semibold text-white inline bg-${bg_colors[i]}-500 rounded-full cursor-pointer`}
+                            <p className={`p-[2px] text-xs font-semibold text-white inline bg-${bg_colors[i]}-500 rounded-full cursor-pointer`}
                               onMouseEnter={() => setHoveredUser(data.user._id)}
                               onMouseLeave={() => setHoveredUser(null)}>
                               {data.user.full_name.split(' ')[0].charAt(0)}{data.user.full_name.split(' ')[1].charAt(0)}
                             </p>
-
                             {hoveredUser === data.user._id && (
                               <Popover user_id={data.user._id} workspace_id={_id} />
                             )}
                           </div>
-
                         </div>
-                        <div className='col-span-7'>
-                          <p>{data.user.full_name}</p>
+
+                        <div className='col-span-7 px-1'>
+                          <p className='text-[15px]'>{data.user.full_name}</p>
                         </div>
                         <div className='col-span-4'>
                           {data.role === "admin" ? (
-                            <p className='text-md flex items-center gap-1 font-semibold'>
-                              <MdAdminPanelSettings className='text-teal-500 text-xl' /> Admin
+                            <p className='text-sm flex items-center gap-1 font-semibold'>
+                              <MdAdminPanelSettings className='text-teal-500 text-[18px]' /> Admin
                             </p>
                           ) : (
-                            <p className='text-md flex items-center gap-1 font-semibold'>
-                              <BiSolidUserAccount className='text-rose-500 text-lg' /> Member
+                            <p className='text-sm flex items-center gap-1 font-semibold'>
+                              <BiSolidUserAccount className='text-rose-500 text-[18px] ' /> Member
                             </p>
                           )}
                         </div>
@@ -288,10 +300,10 @@ const WorkspaceDashboard = () => {
                       <div key={data._id} className='mb-2'>
                         <div className='grid grid-cols-12 items-center text-neutral-700 dark:text-neutral-400'>
                           <div className='col-span-1 flex items-center justify-center'>
-                            <p className='font-semibold'>{ind + 1}.</p>
+                            <p className='font-semibold text-sm text-neutral-500'>{ind + 1}.</p>
                           </div>
-                          <div className='col-span-10'>
-                            <p>{data.invited_email}</p>
+                          <div className='col-span-10 text-sm'>
+                            <p className='text-neutral-500'>{data.invited_email}</p>
                           </div>
                           <div className='col-span-1 flex justify-center'>
                             {user._id === data.inviter && (
@@ -320,7 +332,7 @@ const WorkspaceDashboard = () => {
           <WorkspaceAddTaskModal isOpen={isAddTaskModalOpen} onClose={handleCloseModal} verifiedMember={verifiedMember} workspace_id={_id} />
         )}
         {isChatModalOpen && (
-          <WorkspaceMessageModal isOpen={isChatModalOpen} onClose={handleCloseModal} workspace_id={_id} workspaceName = {workspaceName} />
+          <WorkspaceMessageModal isOpen={isChatModalOpen} onClose={handleCloseModal} workspace_id={_id} workspaceName={workspaceName} />
         )}
         <Toaster />
       </div>
