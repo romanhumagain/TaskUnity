@@ -25,6 +25,7 @@ import Popover from '../../components/Popover';
 import WorkspaceAddTaskModal from '../../components/modal/WorkspaceAddTaskModal';
 import WorkspaceMessageModal from '../../components/modal/WorkspaceMessageModal';
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
+import { useWorkspaceChat } from '../../context/WorkspaceChatContext';
 
 const WorkspaceDashboard = () => {
   const params = useParams()
@@ -41,6 +42,9 @@ const WorkspaceDashboard = () => {
   const [hoveredUser, setHoveredUser] = useState(null);
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
   const [isChatModalOpen, setIsChatModalOpen] = useState(false)
+  const [workspaceName, setworkspaceName] = useState(null)
+
+  const {get_unread_message, unreadMessage} = useWorkspaceChat()
 
   const handleAddTaskModal = () => {
     setIsAddTaskModalOpen(true);
@@ -67,6 +71,7 @@ const WorkspaceDashboard = () => {
       if (response.status === 200) {
         console.log(response.data)
         setWorkspaceDetails(response.data)
+        setworkspaceName(response.data.name)
       };
 
     } catch (error) {
@@ -148,6 +153,7 @@ const WorkspaceDashboard = () => {
     verify_workspace()
     get_workspace_details()
     get_workspace_member()
+    get_unread_message(_id)
   }, [_id])
 
   useEffect(() => {
@@ -167,8 +173,21 @@ const WorkspaceDashboard = () => {
         <div className='max-w-6xl w-full bg-gray-100 dark:bg-neutral-900'>
           <div className=' w-full mt-10 h-52 relative rounded-lg mb-10'>
             <div className='flex justify-end'>
-              <p className='mb-5 text-2xl hover:scale-110 transition-transform duration-700 text-neutral-800 dark:text-neutral-200 cursor-pointer ' onClick={() => setIsChatModalOpen(true)}><IoChatbubbleEllipsesSharp /></p>
-            </div>
+            <div className="relative inline-flex items-center">
+                  <p
+                    className="text-3xl cursor-pointer"
+                    onClick={() => setIsChatModalOpen(true)}
+                  >
+                    <IoChatbubbleEllipsesSharp />
+                    {unreadMessage > 0 && (
+                      <span className="absolute -top-2 -right-2  w-5 h-5 text-xs font-medium text-white bg-red-500 rounded-full flex items-center justify-center">
+                        {unreadMessage}
+                      </span>
+                    )}
+                  </p>
+                </div>
+
+              </div>
             <div className='overflow-hidden'>
               <img src={projectCover} alt='Project Cover' className='h-52 w-full object-cover rounded-lg' />
             </div>
@@ -301,7 +320,7 @@ const WorkspaceDashboard = () => {
           <WorkspaceAddTaskModal isOpen={isAddTaskModalOpen} onClose={handleCloseModal} verifiedMember={verifiedMember} workspace_id={_id} />
         )}
         {isChatModalOpen && (
-          <WorkspaceMessageModal isOpen={isChatModalOpen} onClose={handleCloseModal} />
+          <WorkspaceMessageModal isOpen={isChatModalOpen} onClose={handleCloseModal} workspace_id={_id} workspaceName = {workspaceName} />
         )}
         <Toaster />
       </div>

@@ -3,6 +3,8 @@ import AppRoutes from "./AppRoutes"
 import AuthContextProvider from "./context/AuthContext"
 import TaskContextProvider from "./context/TaskContext"
 import WorkspaceContextProvider from "./context/WorkspaceContext"
+import WorkspaceChatContextProvider from "./context/WorkspaceChatContext"
+
 
 function App() {
   return (
@@ -11,7 +13,9 @@ function App() {
         <AuthContextProvider>
           <TaskContextProvider>
             <WorkspaceContextProvider>
-              <AppRoutes />
+              <WorkspaceChatContextProvider>
+                <AppRoutes />
+              </WorkspaceChatContextProvider>
             </WorkspaceContextProvider>
           </TaskContextProvider>
         </AuthContextProvider>

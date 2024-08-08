@@ -20,6 +20,7 @@ const get_workspace = async (req, res) => {
   } catch (error) {
     sendErrorResponse(res, error)
   }
+  
 };
 
 const get_workspace_details = async (req, res) => {
