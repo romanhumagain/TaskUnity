@@ -28,6 +28,8 @@ import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 import { useWorkspaceChat } from '../../context/WorkspaceChatContext';
 import TaskList from '../../components/workspace/TaskList';
 import { IoAddOutline } from "react-icons/io5";
+import { IoSearch } from "react-icons/io5";
+
 
 const WorkspaceDashboard = () => {
   const params = useParams()
@@ -173,7 +175,17 @@ const WorkspaceDashboard = () => {
     isAuthorizedUser ? (
       <div className='min-h-screen w-full bg-gray-100 dark:bg-neutral-900 flex justify-center'>
         <div className='max-w-6xl w-full bg-gray-100 dark:bg-neutral-900'>
-          <div className='bg-gradient-to-r from-gray-200 via-gray-300 to-gray-400 dark:from-neutral-800 dark:to-neutral-900 p-3 flex items-center justify-end shadow-lg'>
+
+          <div className='bg-gradient-to-r from-gray-200 via-gray-300 to-gray-400 dark:from-neutral-800 dark:to-neutral-900 p-4 py-5 flex items-center justify-between shadow-lg'>
+            <div className="relative w-1/2">
+              <input
+                className="block bg-gray-200 dark:bg-neutral-800 p-2 pl-10 dark:text-gray-300 focus:outline-none rounded-xl w-full shadow-md"
+                type="text"
+                id="title"
+                placeholder='Search here'
+              />
+              <IoSearch className="absolute left-3 top-1/2  -translate-y-1/2 text-gray-600 dark:text-gray-200" />
+            </div>
             <div className='flex items-center  gap-6'>
               <button
                 className='text-md font-semibold p-1 px-4 bg-neutral-900 text-white border-2 border-neutral-600 dark:bg-gray-200 dark:text-black dark:border-gray-500 dark:hover:bg-gray-300 rounded-full transition-transform transform hover:scale-105 flex items-center gap-2 duration-500'
@@ -215,11 +227,9 @@ const WorkspaceDashboard = () => {
           </div>
 
 
-          <div className=' w-full h-52 relative rounded-md mb-10'>
-            <div className='overflow-hidden'>
-              <img src={projectCover} alt='Project Cover' className='h-52 w-full object-cover rounded-lg' />
-            </div>
-            <div className='absolute flex items-center gap-2 -bottom-6 left-10 mt-10 bg-gray-300 dark:text-white/90 dark:bg-neutral-700 p-5 rounded-xl shadow-lg'>
+          <div className=' w-full h-16 relative mb-10 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-400 dark:from-neutral-800 dark:to-neutral-900'>
+
+            <div className='absolute flex items-center gap-2 -bottom-6 left-10 mt-10 bg-gray-300 dark:text-white/90 dark:bg-neutral-800 p-5 rounded-xl shadow-lg'>
               <p className='text-rose-500 text-xl'><FaCode /></p>
               <p className='font-semibold'>{workspaceDetails?.name}</p>
             </div>

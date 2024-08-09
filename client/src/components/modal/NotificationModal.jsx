@@ -56,7 +56,7 @@ const NotificationModal = ({ isOpen, onClose }) => {
         >
           <button
             type="button"
-            className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            className="absolute top-3 right-2.5 text-gray-700 dark:text-gray-400 bg-transparent hover:bg-gray-300  hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex justify-center items-center dark:hover:bg-neutral-600 dark:hover:text-white"
             onClick={closeModal}
             aria-label="Close modal"
           >
@@ -76,18 +76,19 @@ const NotificationModal = ({ isOpen, onClose }) => {
               />
             </svg>
           </button>
-          <div className="p-4">
+          <div className="p-4 bg-gradient-to-r from-gray-300  to-gray-400 dark:from-zinc-800 dark:via-neutral-800 dark:to-neutral-900">
             <h2 id="notification-modal-title" className="text-xl font-semibold mb-2 text-gray-800 dark:text-neutral-200 p-1">Notification</h2>
 
-            <div className="rounded-lg  mt-6 space-y-2 ">
+            <div className="overflow-y-auto h-[calc(100vh-100px)]  ">
               {notificationData && notificationData.map((data) => (
-                <div key={data._id} className={`${data.is_read ? 'bg-gray-200 dark:bg-neutral-800' : 'bg-gray-300 dark:bg-neutral-700'} p-2 border border-gray-200 dark:border-neutral-600 rounded-lg flex flex-col space-y-2 shadow-md`}>
-                  <p className="text-gray-800 dark:text-neutral-200 font-medium">{data.description}</p>
-                  <p className="text-sm text-gray-500 dark:text-neutral-500">
+                <div key={data._id} className={`${data.is_read ? 'bg-gray-200 dark:bg-neutral-800' : 'bg-gray-300 dark:bg-neutral-700'} p-2 border border-gray-200 dark:border-neutral-600 rounded-lg flex flex-col space-y-2 shadow-md mb-1`}>
+                  <p className="text-gray-800 dark:text-neutral-200 text-sm font-medium">{data.description}</p>
+                  <p className="text-sm text-gray-500 dark:text-neutral-500 text-end">
                     {formatDistanceToNow(new Date(data.createdAt), { addSuffix: true })}
                   </p>
                 </div>
               ))}
+  
             </div>
           </div>
         </div>

@@ -12,6 +12,7 @@ import ImportantTask from "./pages/Task/ImportantTask"
 import TaskDetails from "./pages/Task/TaskDetails"
 import WorkspaceDashboard from "./pages/workspace/WorkspaceDashboard"
 import VerifyWorkspace from "./pages/workspace/VerifyWorkspace"
+import WorkspaceTaskDetails from "./components/workspace/WorkspaceTaskDetails"
 
 function AppRoutes() {
   const {user} = useAuth()
@@ -34,6 +35,7 @@ function AppRoutes() {
               <Route path="/task-details/:id" element={<TaskDetails />} />
               <Route path="/workspace/:id" element={<WorkspaceDashboard />} />
               <Route path="/verify-workspace/:workspace_id/:invitation_id" element={<VerifyWorkspace />} />
+              <Route path="/workspace-task-details" element={<WorkspaceTaskDetails />} />
             </Routes>
           </div>
         </div>

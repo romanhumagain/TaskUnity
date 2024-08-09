@@ -46,10 +46,10 @@ const WorkspaceMessageModal = ({ isOpen, onClose, workspace_id, workspaceName })
     reset()
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     read_workspace_message(workspace_id)
     mark_all_message_read(workspace_id)
-  },[workspace_id])
+  }, [workspace_id])
 
   return (
     <>
@@ -60,18 +60,18 @@ const WorkspaceMessageModal = ({ isOpen, onClose, workspace_id, workspaceName })
         aria-labelledby="notification-modal-title"
       >
         <div
-          className={`relative max-w-md w-full top-2 bottom-2 bg-gray-200 dark:bg-neutral-800 rounded-xl shadow-lg transform transition-transform duration-300`}
+          className={`relative max-w-md w-full top-0 bottom-2 bg-gray-200 dark:bg-neutral-800 rounded-l-xl shadow-lg transform transition-transform duration-300 overflow-hidden`}
           role="document"
         >
           {/* Top of the page and fixed */}
-          <div className='fixed top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-gray-300 dark:bg-neutral-700'>
+          <div className='fixed top-0 left-0 right-0 z-10 flex items-center justify-between p-4  bg-gray-300 dark:bg-neutral-800'>
             <div className='text-2xl text-neutral-800 dark:text-neutral-200 flex items-center gap-5'>
               <FaUsers />
               <h2 id="notification-modal-title" className="text-[16px] font-semibold">{workspaceName}</h2>
             </div>
             <button
               type="button"
-              className="absolute top-3 right-2.5 text-gray-600 dark:text-gray-200 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+              className="absolute top-3 right-2.5 text-gray-700 dark:text-gray-200 bg-transparent hover:bg-gray-400 hover:text-gray-900 rounded-lg text-sm w-8 h-8 flex justify-center items-center dark:hover:bg-neutral-600 dark:hover:text-white"
               onClick={closeModal}
               aria-label="Close modal"
             >
@@ -93,21 +93,17 @@ const WorkspaceMessageModal = ({ isOpen, onClose, workspace_id, workspaceName })
             </button>
           </div>
 
-          <div className="pt-16 pb-16 overflow-y-auto h-[calc(100vh-120px)]">
-
+          <div className="pt-20 pb-16 overflow-y-auto h-[calc(100vh-50px)] bg-gradient-to-r from-gray-300 via-gray-400 to-gray-400 dark:from-zinc-800  dark:to-neutral-900">
             {messages && messages?.map((message) => (
-              <WorkspaceChatList message={message}/>
+              <WorkspaceChatList message={message} />
             ))}
-
-
-
             {/* Dummy div to scroll to the bottom */}
             <div ref={endOfMessagesRef} />
           </div>
 
           {/* Bottom of the page and fixed */}
           <form onSubmit={handleSubmit(sendMessage)}>
-            <div className='fixed bottom-4 left-0 right-0 flex items-center gap-5 px-5 py-2 bg-gray-200 dark:bg-neutral-800'>
+            <div className='fixed bottom-4 left-0 right-0 flex items-center gap-5 px-5  bg-gray-200 dark:bg-neutral-800'>
               <div className="flex-grow">
                 <textarea className="block bg-gray-300 dark:bg-neutral-700 p-2 dark:text-gray-300 px-2 mt-1 focus:outline-none rounded-xl w-full h-12 shadow-lg" id="message" placeholder='Type message here...'
                   {...register("message", {
@@ -118,7 +114,7 @@ const WorkspaceMessageModal = ({ isOpen, onClose, workspace_id, workspaceName })
                   })}
                 />
               </div>
-              <button type='submit' className=' font-semibold text-sky-600 text-3xl'><IoMdSend/></button>
+              <button type='submit' className=' font-semibold text-sky-600 text-3xl'><IoMdSend /></button>
             </div>
           </form>
         </div>

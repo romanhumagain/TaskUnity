@@ -44,7 +44,7 @@ const TaskList = () => {
         <hr className='border border-gray-300 dark:border-neutral-700 mt-4' />
         <p className='text-neutral-500 px-2 m-1'>No Subtask </p>
         <div className='text-neutral-800 dark:text-gray-200'>
-          <p className='flex items-center gap-2 py-2 px-1 bg-neutral-300 dark:bg-neutral-700 rounded-lg'><IoAddOutline /> ADD SUBTASK</p>
+          <p className='flex items-center gap-2 p-1 bg-gray-300 dark:bg-neutral-700 rounded-lg shadow-md'><IoAddOutline /> ADD SUBTASK</p>
         </div>
 
       </div>

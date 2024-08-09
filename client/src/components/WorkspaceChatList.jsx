@@ -15,7 +15,7 @@ const WorkspaceChatList = ({ message }) => {
           </div>
           <div className='col-span-8 flex flex-col justify-start'>
             <p className='text-sm text-gray-600 dark:text-neutral-400 mb-1 px-1'>{message?.senderDetails?.full_name}</p>
-            <div className='bg-gray-300 dark:bg-neutral-700 dark:text-white/90 rounded-lg p-1  inline'>
+            <div className='bg-gray-300 dark:bg-neutral-800 dark:text-white/90 rounded-lg p-1  inline'>
               <p className='inline py-[2px] rounded-lg '>{message.message}</p>
               <p className='text-xs text-gray-500 dark:text-gray-300 flex justify-end mb-1'>{new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</p>
             </div>
