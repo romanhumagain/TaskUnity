@@ -20,7 +20,7 @@ const workspaceMessageSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-const workspaceTaskMessageSchema = new mongoose.Schema({
+const workspaceTaskActivitySchema = new mongoose.Schema({
   workspace: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Workspace',
@@ -36,6 +36,10 @@ const workspaceTaskMessageSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  activity: {
+    type: String,
+    required: true,
+  },
   message: {
     type: String,
     required: true,
@@ -46,9 +50,9 @@ const workspaceTaskMessageSchema = new mongoose.Schema({
 
 
 const WorkspaceMessage = mongoose.model("workspace_message", workspaceMessageSchema);
-const WorkspaceTaskMessage = mongoose.model("workspace_task_message", workspaceTaskMessageSchema);
+const WorkspaceTaskActivity = mongoose.model("workspace_task_activity", workspaceTaskActivitySchema);
 
 
 module.exports = {
-  WorkspaceMessage, WorkspaceTaskMessage
+  WorkspaceMessage, WorkspaceTaskActivity
 };

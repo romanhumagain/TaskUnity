@@ -26,6 +26,8 @@ app.use('/api/workspace',require('./src/routes/workspaceRoutes'))
 app.use('/api/notification', require('./src/routes/notificationRoutes'))
 app.use('/api/workspace/task',require('./src/routes/workspaceTaskRoutes'))
 app.use('/api/workspace/message',require('./src/routes/workspaceMessageRoutes'))
+app.use('/api/workspace/task/activity',require('./src/routes/workspaceTaskActivityRoutes'))
+
 
 
 
