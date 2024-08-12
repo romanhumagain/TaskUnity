@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form';
+import { useWorkspace } from '../../context/WorkspaceContext';
+import ActivityMessage from './ActivityMessage';
 
-const ActivitiesDetails = () => {
+const ActivitiesDetails = ({ workspace_id, task_id }) => {
+  const { send_task_activity, fetch_workspace_task_activities, taskActivities, isTaskActivitySent, setIsTaskActivitySent } = useWorkspace();
 
   const form = useForm({
     defaultValues: {
@@ -14,15 +17,33 @@ const ActivitiesDetails = () => {
   const { errors } = formState;
 
   const sendMessage = async (data) => {
-    console.log(data)
-  }
+    send_task_activity(data, workspace_id, task_id)
+    reset()
+    console.log("message sent successfully !")
+  };
+
+  useEffect(() => {
+    fetch_workspace_task_activities(workspace_id, task_id)
+  }, [workspace_id, task_id])
+
+  useEffect(() => {
+    if (isTaskActivitySent) {
+      fetch_workspace_task_activities(workspace_id, task_id)
+      setIsTaskActivitySent(false)
+    }
+  }, [isTaskActivitySent])
 
   return (
     <>
       <div className='bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-800  h-auto rounded-lg shadow-lg '>
-        <div className='grid grid-cols-12 p-8'>
+        <div className='grid grid-cols-12 p-8 gap-10'>
           <div className='col-span-6'>
             <p className='font-semibold text-lg text-neutral-800 dark:text-gray-200'>Activities</p>
+            {taskActivities && taskActivities?.map((data) => (
+              <div key={data._id}>
+                <ActivityMessage data={data} />
+              </div>
+            ))}
           </div>
 
           <div className='col-span-6'>

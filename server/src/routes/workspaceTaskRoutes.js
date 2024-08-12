@@ -9,8 +9,8 @@ const {
   delete_workspace_task
 } = require('../controllers/workspaceTaskController')
 
-router.get('/', auth, get_workspace_task);
-router.get('/:task_id', auth, get_workspace_task_details);
+router.get('/:workspace_id', auth, get_workspace_task);
+router.get('/:workspace_id/:task_id', auth, get_workspace_task_details);
 router.post('/:workspace_id', auth, add_workspace_task);
 router.put('/:task_id', auth, update_workspace_task);
 router.delete('/:task_id', auth, delete_workspace_task);

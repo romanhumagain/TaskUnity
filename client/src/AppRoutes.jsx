@@ -35,7 +35,7 @@ function AppRoutes() {
               <Route path="/task-details/:id" element={<TaskDetails />} />
               <Route path="/workspace/:id" element={<WorkspaceDashboard />} />
               <Route path="/verify-workspace/:workspace_id/:invitation_id" element={<VerifyWorkspace />} />
-              <Route path="/workspace-task-details" element={<WorkspaceTaskDetails />} />
+              <Route path="/workspace-task-details/:workspace_id/:task_id" element={<WorkspaceTaskDetails />} />
             </Routes>
           </div>
         </div>

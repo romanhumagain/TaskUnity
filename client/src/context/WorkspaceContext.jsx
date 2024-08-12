@@ -16,8 +16,13 @@ const WorkspaceContextProvider = ({ children }) => {
   const axiosInstance = createAxiosInstance();
   const [isInvited, setIsInvited] = useState(false)
   const [isWorkspaceDeleted, setIsWorkspaceDeleted] = useState(false)
+  const [workspaceTasks, setWorkspaceTasks] = useState(null)
+  const [taskDetails, setTaskDetails] = useState(null)
+  const [isTaskActivitySent, setIsTaskActivitySent] = useState(false)
+  const [taskActivities, setTaskActivities] = useState(null)
   const { logoutUser } = useAuth();
   const navigate  = useNavigate();
+  
 
   // to get the available workspaces
   const get_workspace = async () => {
@@ -89,6 +94,76 @@ const WorkspaceContextProvider = ({ children }) => {
     }
   }
 
+  const get_workspace_task = async(workspace_id)=>{
+    try {
+      const response = await axiosInstance.get(`workspace/task/${workspace_id}`);
+      if(response.status=== 200){
+        setWorkspaceTasks(response.data);
+        console.log(response.data)
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          logoutUser()
+        }
+      };
+      console.log(error)
+    } 
+  }
+
+  const fetch_workspace_task_details = async(workspace_id, task_id)=>{
+    try {
+      const response = await axiosInstance.get(`workspace/task/${workspace_id}/${task_id}`);
+      if(response.status=== 200){
+        setTaskDetails(response.data)
+        console.log(response.data)
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          logoutUser()
+        }
+      };
+      console.log(error)
+    } 
+  };
+
+  const send_task_activity = async(data, workspace_id, task_id)=>{
+    try {
+      const response = await axiosInstance.post(`workspace/task/activity/${workspace_id}/${task_id}/`, data);
+      if(response.status=== 200){
+        setIsTaskActivitySent(true)
+        console.log(response.data)
+      }
+    } 
+    catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          logoutUser()
+        }
+      };
+      console.log(error)
+    }
+  }
+
+  const fetch_workspace_task_activities = async(workspace_id, task_id)=>{
+    try {
+      const response = await axiosInstance.get(`workspace/task/activity/${workspace_id}/${task_id}`);
+      if(response.status=== 200){
+        setTaskActivities(response.data)
+        console.log(response.data)
+      };
+
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          logoutUser()
+        }
+      };
+      console.log(error)
+    } 
+  };
+
   useEffect(() => {
     if (isWorkspaceCreated) {
       get_workspace();
@@ -125,7 +200,16 @@ const WorkspaceContextProvider = ({ children }) => {
     get_unread_notification,
     unreadNotification,
     mark_all_notification_read,
-    delete_workspace
+    delete_workspace,
+    get_workspace_task,
+    workspaceTasks, 
+    fetch_workspace_task_details, 
+    taskDetails,
+    send_task_activity,
+    fetch_workspace_task_activities,
+    taskActivities,
+    isTaskActivitySent,
+    setIsTaskActivitySent
   }
   return (
     <WorkspaceContext.Provider value={context}>

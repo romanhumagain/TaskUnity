@@ -24,7 +24,7 @@ router.post('/add_workspace_member', auth, add_membership)
 router.get('/member/:workspace_id', auth, get_workspace_users)
 router.delete('/:id', auth, remove_invitation)
 router.delete('/delete/:workspace_id', auth, delete_workspace)
-router.delete('/verify/:workspace_id', auth, verify_workspace)
+router.get('/verify/:workspace_id', auth, verify_workspace)
 
 
 module.exports = router;

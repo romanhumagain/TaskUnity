@@ -9,7 +9,7 @@ const sendErrorResponse = (res, error) => {
 const read_activity_message = async (req, res) => {
   try {
     const { workspace_id, task_id } = req.params;
-    const activities = await WorkspaceTaskActivity.find({ workspace: workspace_id, workspace_task: task_id });
+    const activities = await WorkspaceTaskActivity.find({ workspace: workspace_id, workspace_task: task_id }).populate('sender').sort({createdAt:-1});
     res.status(200).json(activities)
   } catch (error) {
     sendErrorResponse(res, error)
@@ -19,20 +19,28 @@ const read_activity_message = async (req, res) => {
 const send_activity_message = async (req, res) => {
   try {
     const { workspace_id, task_id } = req.params;
+
+    const workspaceId = new mongoose.Types.ObjectId(workspace_id);
+    const taskId = new mongoose.Types.ObjectId(task_id);
+
     const { activity, message } = req.body;
     const activityMessage = new WorkspaceTaskActivity({
-      workspace: workspace_id,
-      workspace_task: task_id,
+      workspace: workspaceId,
+      workspace_task: taskId,
       activity,
-      message
-    })
+      message,
+      sender: req.user._id
+    });
 
-    await activityMessage.save()
-    res.status(200).json(activityMessage)
+    await activityMessage.save();
+    res.status(200).json(activityMessage);
   } catch (error) {
-    sendErrorResponse(res, error)
+    console.error("Error:", error);
+    sendErrorResponse(res, error);
   }
 };
+
+
 
 module.exports = {
   read_activity_message, send_activity_message

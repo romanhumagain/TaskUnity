@@ -42,7 +42,7 @@ const WorkspaceDashboard = () => {
   const [pendingMember, setPendingMember] = useState(null)
   const [removedInvitation, setRemovedInvitation] = useState(false)
   const { logoutUser, user } = useAuth()
-  const { isInvited, setIsInvited, delete_workspace } = useWorkspace()
+  const { isInvited, setIsInvited, delete_workspace, get_workspace_task, workspaceTasks } = useWorkspace()
   const [hoveredUser, setHoveredUser] = useState(null);
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
   const [isChatModalOpen, setIsChatModalOpen] = useState(false)
@@ -55,7 +55,7 @@ const WorkspaceDashboard = () => {
   };
   const verify_workspace = async () => {
     try {
-      const response = await axiosInstance.delete(`workspace/verify/${_id}/`);
+      const response = await axiosInstance.get(`workspace/verify/${_id}/`);
       if (response.status === 200) {
         setIsAuthorizedUser(true)
       }
@@ -67,7 +67,7 @@ const WorkspaceDashboard = () => {
       };
       console.log(error)
     }
-  }
+  };
 
   const get_workspace_details = async () => {
     try {
@@ -158,6 +158,7 @@ const WorkspaceDashboard = () => {
     get_workspace_details()
     get_workspace_member()
     get_unread_message(_id)
+    get_workspace_task(_id)
   }, [_id])
 
   useEffect(() => {
@@ -248,15 +249,22 @@ const WorkspaceDashboard = () => {
             </div>
           </div>
 
-          <div className='grid grid-cols-12 p-2 mt-5'>
-
-            <div className='col-span-9 flex gap-5'>
-              <TaskList />
-              <TaskList />
-
+          <div className='grid grid-cols-1 md:grid-cols-12 gap-2 p-2 mt-5'>
+            <div className='col-span-1 md:col-span-9'>
+              {workspaceTasks ? (
+                <div className='flex flex-wrap gap-8'>
+                  {workspaceTasks.map((data) => (
+                    <div key={data.id} className='w-full md:max-w-sm'>
+                      <TaskList data={data} workspace_id={_id} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>No Tasks Found</p>
+              )}
             </div>
 
-            <div className='col-span-3'>
+            <div className='col-span-1 md:col-span-3'>
               <div className='shadow-lg rounded-lg p-4'>
                 <p className='font-semibold text-[17px] mb-2 flex items-center gap-2 text-neutral-800 dark:text-neutral-200'>
                   <MdVerifiedUser className='text-lg text-green-500' /> Verified Member
@@ -334,6 +342,7 @@ const WorkspaceDashboard = () => {
               </div>
             </div>
           </div>
+
         </div>
         {inviteModalOpen && (
           <InviteModal isOpen={inviteModalOpen} onClose={handleCloseModal} workspace_id={_id} />

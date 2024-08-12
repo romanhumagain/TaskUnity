@@ -24,15 +24,14 @@ const get_workspace_task = async (req, res) => {
 
 const get_workspace_task_details = async (req, res) => {
   try {
-    const { task_id } = req.params;
+    const { workspace_id, task_id } = req.params;
 
     // Find the task by its ID
-    const task = await WorkspaceTask.findById(task_id).populate('assigned_users.user');
+    const task = await WorkspaceTask.findOne({_id:task_id, workspace:workspace_id}).populate('assigned_users.user');
 
     if (!task) {
       return res.status(404).json({ msg: 'Task not found!' });
     }
-
     res.status(200).json(task);
   } catch (error) {
     sendErrorResponse(res, error);

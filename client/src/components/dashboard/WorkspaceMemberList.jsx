@@ -3,7 +3,7 @@ import Popover from '../Popover';
 
 const WorkspaceMemberList = ({ users, workspace_id }) => {
   const bg_colors = [
-    "red", "teal", "sky", "rose", "purple", "yellow"
+    "bg-orange-500", "bg-sky-500", "bg-red-500", "bg-teal-500", "bg-rose-500", "bg-green-500"
   ];
 
   const [hoveredUser, setHoveredUser] = useState(null);
@@ -15,7 +15,7 @@ const WorkspaceMemberList = ({ users, workspace_id }) => {
           key={data._id}
           className="relative"
         >
-          <p className={`p-[2px] text-xs font-semibold text-white inline bg-${bg_colors[i]}-500 rounded-full cursor-pointer`}
+          <p className={`p-[2px] text-xs font-semibold text-white inline ${bg_colors[i]} rounded-full cursor-pointer`}
            onMouseEnter={() => setHoveredUser(data._id)}
            onMouseLeave={() => setHoveredUser(null)}
           >
