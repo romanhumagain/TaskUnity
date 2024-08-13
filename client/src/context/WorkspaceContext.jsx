@@ -11,6 +11,7 @@ const WorkspaceContextProvider = ({ children }) => {
   const [workspaceData, setWorkspaceData] = useState(null);
   const [isWorkspaceCreated, setIsWorkspaceCreated] = useState(false);
   const [workspaceVerified, setWorkspaceVerified] = useState(false)
+  const [isTaskAdded, setIsTaskAdded] = useState(false)
   const [isMarkedRead, setIsMarkedRead] = useState(false)
   const [unreadNotification, setUnreadNotification] = useState(0)
   const axiosInstance = createAxiosInstance();
@@ -20,6 +21,8 @@ const WorkspaceContextProvider = ({ children }) => {
   const [taskDetails, setTaskDetails] = useState(null)
   const [isTaskActivitySent, setIsTaskActivitySent] = useState(false)
   const [taskActivities, setTaskActivities] = useState(null)
+  const [isDeleted, setIsDeleted] = useState(false)
+  const [isUpdated, setIsUpdated] = useState(false)
   const { logoutUser } = useAuth();
   const navigate  = useNavigate();
   
@@ -109,6 +112,27 @@ const WorkspaceContextProvider = ({ children }) => {
       };
       console.log(error)
     } 
+  }
+
+   // function to delete task
+   const deleteWorkspaceTask = async (task_id) => {
+    try {
+      const response = await axiosInstance.delete(`workspace/task/${task_id}/`)
+      if (response.status === 200) {
+        toast.success("Successfully deleted your task !")
+        setIsDeleted(true)
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          logoutUser()
+        }
+        else {
+          toast.error("Sorry, Couldn't delete your task !")
+        }
+      }
+      console.log(error)
+    }
   }
 
   const fetch_workspace_task_details = async(workspace_id, task_id)=>{
@@ -209,7 +233,14 @@ const WorkspaceContextProvider = ({ children }) => {
     fetch_workspace_task_activities,
     taskActivities,
     isTaskActivitySent,
-    setIsTaskActivitySent
+    setIsTaskActivitySent,
+    deleteWorkspaceTask,
+    isDeleted, 
+    setIsDeleted,
+    setIsTaskAdded,
+    isTaskAdded,
+    isUpdated,
+    setIsUpdated
   }
   return (
     <WorkspaceContext.Provider value={context}>

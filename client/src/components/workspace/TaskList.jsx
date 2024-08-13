@@ -11,11 +11,43 @@ import { IoAddOutline } from "react-icons/io5";
 import WorkspaceTaskMemberList from './WorkspaceTaskMemberList';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { useWorkspace } from '../../context/WorkspaceContext';
+import WorkspaceAddTaskModal from '../modal/WorkspaceAddTaskModal';
 
-const TaskList = ({ data, workspace_id }) => {
+const TaskList = ({ data, workspace_id, verifiedMember }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isUpdateTaskModalOpen, setIsUpdateTaskModalOpen] = useState(false)
+
+
+  const { deleteWorkspaceTask } = useWorkspace()
 
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  const handleDeleteTask = (task_id) => {
+    setIsOpen(false)
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#808080",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteWorkspaceTask(task_id)
+        setIsOpen(false)
+      }
+    });
+  }
+
+  const handleCloseModal = () => {
+    setIsOpen(false)
+    if (isUpdateTaskModalOpen) {
+      setIsUpdateTaskModalOpen(false);
+    }
+  };
   return (
     <>
       <div className="bg-gray-200 dark:bg-neutral-800 max-w-md w-full p-5 px-7 mb-8 rounded-2xl shadow-xl">
@@ -45,11 +77,11 @@ const TaskList = ({ data, workspace_id }) => {
                   <IoMdPerson className='text-lg mr-2' />
                   Assigned User
                 </li>
-                <li className='flex items-center px-4 py-[8px] hover:bg-gray-200 dark:hover:bg-neutral-700 cursor-pointer'>
+                <li className='flex items-center px-4 py-[8px] hover:bg-gray-200 dark:hover:bg-neutral-700 cursor-pointer' onClick={()=>setIsUpdateTaskModalOpen(true)}>
                   <IoMdCreate className='text-lg mr-2' />
                   Edit Task
                 </li>
-                <li className='flex items-center px-4 py-[8px] hover:bg-gray-200 dark:hover:bg-neutral-700 cursor-pointer'>
+                <li className='flex items-center px-4 py-[8px] hover:bg-gray-200 dark:hover:bg-neutral-700 cursor-pointer' onClick={() => handleDeleteTask(data._id)}>
                   <IoMdTrash className='text-lg mr-2' />
                   Delete Task
                 </li>
@@ -95,6 +127,10 @@ const TaskList = ({ data, workspace_id }) => {
         </div>
 
       </div>
+
+      {isUpdateTaskModalOpen && (
+        <WorkspaceAddTaskModal isOpen={isUpdateTaskModalOpen} onClose={handleCloseModal} verifiedMember={verifiedMember} workspace_id={workspace_id} task_id={data._id} />
+      )}
     </>
   )
 }

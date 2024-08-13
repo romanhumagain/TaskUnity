@@ -42,7 +42,7 @@ const WorkspaceDashboard = () => {
   const [pendingMember, setPendingMember] = useState(null)
   const [removedInvitation, setRemovedInvitation] = useState(false)
   const { logoutUser, user } = useAuth()
-  const { isInvited, setIsInvited, delete_workspace, get_workspace_task, workspaceTasks } = useWorkspace()
+  const { isInvited, setIsInvited, delete_workspace, get_workspace_task, workspaceTasks, isDeleted, setIsDeleted, isTaskAdded, setIsTaskAdded, isUpdated, setIsUpdated } = useWorkspace()
   const [hoveredUser, setHoveredUser] = useState(null);
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false)
   const [isChatModalOpen, setIsChatModalOpen] = useState(false)
@@ -172,6 +172,21 @@ const WorkspaceDashboard = () => {
     }
   }, [removedInvitation, isInvited])
 
+  useEffect(() => {
+    if (isDeleted) {
+      get_workspace_task(_id)
+      setIsDeleted(false)
+    }
+    if (isTaskAdded) {
+      get_workspace_task(_id)
+      setIsTaskAdded(false)
+    }
+    if (isUpdated) {
+      get_workspace_task(_id)
+      setIsUpdated(false)
+    }
+  }, [isDeleted, isTaskAdded, isUpdated])
+
   return (
     isAuthorizedUser ? (
       <div className='min-h-screen w-full bg-gray-100 dark:bg-neutral-900 flex justify-center'>
@@ -255,7 +270,7 @@ const WorkspaceDashboard = () => {
                 <div className='flex flex-wrap gap-8'>
                   {workspaceTasks.map((data) => (
                     <div key={data.id} className='w-full md:max-w-sm'>
-                      <TaskList data={data} workspace_id={_id} />
+                      <TaskList data={data} workspace_id={_id} verifiedMember={verifiedMember} />
                     </div>
                   ))}
                 </div>
