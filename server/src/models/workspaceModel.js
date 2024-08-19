@@ -119,15 +119,32 @@ const workspaceTaskSchema = new mongoose.Schema({
   }
 }, { timestamps: true })
 
+const workspaceSubTaskSchema = new mongoose.Schema({
+  task: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'workspace_task',
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  tag: {
+    type: String,
+    required: true,
+  }
+}, { timestamps: true })
 
-const WorkspaceTask = mongoose.model('workspace_task', workspaceTaskSchema)
-const Workspace = mongoose.model('Workspace', workspaceSchema)
+const WorkspaceTask = mongoose.model('workspace_task', workspaceTaskSchema);
+const Workspace = mongoose.model('Workspace', workspaceSchema);
 const Membership = mongoose.model('Membership', membershipSchema);
 const Invitation = mongoose.model('Invitation', invitationSchema);
+const Subtask = mongoose.model('Subtask', workspaceSubTaskSchema);
 
 module.exports = {
   Workspace,
   Membership,
   Invitation,
-  WorkspaceTask
+  WorkspaceTask,
+  Subtask
 };

@@ -243,7 +243,7 @@ const WorkspaceDashboard = () => {
           </div>
 
 
-          <div className=' w-full h-16 relative mb-10 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-400 dark:from-neutral-800 dark:to-neutral-900'>
+          <div className=' w-full h-16 relative mb-10 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-400 dark:from-neutral-800 dark:to-neutral-900 rounded-b-xl'>
 
             <div className='absolute flex items-center gap-2 -bottom-6 left-10 mt-10 bg-gray-300 dark:text-white/90 dark:bg-neutral-800 p-5 rounded-xl shadow-lg'>
               <p className='text-rose-500 text-xl'><FaCode /></p>

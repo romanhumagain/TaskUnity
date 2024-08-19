@@ -1,4 +1,4 @@
-const { Workspace, WorkspaceTask } = require('../models/workspaceModel')
+const { Workspace, WorkspaceTask, Subtask } = require('../models/workspaceModel')
 
 const sendErrorResponse = (res, error) => {
   console.log(error);
@@ -27,12 +27,14 @@ const get_workspace_task_details = async (req, res) => {
     const { workspace_id, task_id } = req.params;
 
     // Find the task by its ID
-    const task = await WorkspaceTask.findOne({_id:task_id, workspace:workspace_id}).populate('assigned_users.user');
+    const task = await WorkspaceTask.findOne({ _id: task_id, workspace: workspace_id }).populate('assigned_users.user');
+
+    const subtask = await Subtask.find({task:task_id})
 
     if (!task) {
       return res.status(404).json({ msg: 'Task not found!' });
     }
-    res.status(200).json(task);
+    res.status(200).json({task, subtask});
   } catch (error) {
     sendErrorResponse(res, error);
   }
@@ -122,11 +124,43 @@ const delete_workspace_task = async (req, res) => {
   }
 };
 
+const add_subtask = async (req, res) => {
+  try {
+    const { task_id } = req.params;
+    const { description, tag } = req.body;
+    const subtask = new Subtask(
+      {
+        task: task_id,
+        description,
+        tag
+      }
+    );
+    await subtask.save();
+    res.status(200).json({ message: 'Successfully added subtask !' });
+
+  } catch (error) {
+    sendErrorResponse(res, error)
+  }
+};
+
+const get_subtask = async (req, res) => {
+  try {
+    const { task_id } = req.params;
+    const subtask = await Subtask.find({ task: task_id })
+
+    res.status(200).json(subtask)
+  } catch (error) {
+    sendErrorResponse(res, error)
+  }
+};
+
 
 module.exports = {
   get_workspace_task,
   get_workspace_task_details,
   add_workspace_task,
   update_workspace_task,
-  delete_workspace_task
+  delete_workspace_task,
+  add_subtask,
+  get_subtask
 }

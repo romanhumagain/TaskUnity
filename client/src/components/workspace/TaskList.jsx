@@ -14,10 +14,13 @@ import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useWorkspace } from '../../context/WorkspaceContext';
 import WorkspaceAddTaskModal from '../modal/WorkspaceAddTaskModal';
+import AddSubtaskModal from '../modal/AddSubtaskModal'
 
 const TaskList = ({ data, workspace_id, verifiedMember }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isUpdateTaskModalOpen, setIsUpdateTaskModalOpen] = useState(false)
+  const [isSubTaskModalOpen, setIsSubTaskModalOpen] = useState(false)
+
 
 
   const { deleteWorkspaceTask } = useWorkspace()
@@ -46,6 +49,9 @@ const TaskList = ({ data, workspace_id, verifiedMember }) => {
     setIsOpen(false)
     if (isUpdateTaskModalOpen) {
       setIsUpdateTaskModalOpen(false);
+    }
+    if (isSubTaskModalOpen) {
+      setIsSubTaskModalOpen(false);
     }
   };
   return (
@@ -121,15 +127,17 @@ const TaskList = ({ data, workspace_id, verifiedMember }) => {
         </div>
 
         <hr className='border border-gray-300 dark:border-neutral-700 mt-4' />
-        <p className='text-neutral-500 px-2 m-1'>No Subtask </p>
         <div className='text-neutral-800 dark:text-gray-200'>
-          <p className='flex items-center gap-2 p-1 bg-gray-300 dark:bg-neutral-700 rounded-lg shadow-md'><IoAddOutline /> ADD SUBTASK</p>
+          <p className='flex items-center gap-2 p-1 bg-gray-300 dark:bg-neutral-700 rounded-lg shadow-md' onClick={()=>setIsSubTaskModalOpen(true)}><IoAddOutline /> ADD SUBTASK</p>
         </div>
 
       </div>
 
       {isUpdateTaskModalOpen && (
         <WorkspaceAddTaskModal isOpen={isUpdateTaskModalOpen} onClose={handleCloseModal} verifiedMember={verifiedMember} workspace_id={workspace_id} task_id={data._id} />
+      )}
+      {isSubTaskModalOpen && (
+        <AddSubtaskModal isOpen={isSubTaskModalOpen} onClose={handleCloseModal} task_id={data._id} />
       )}
     </>
   )

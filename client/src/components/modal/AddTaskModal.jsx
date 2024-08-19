@@ -103,7 +103,7 @@ const AddTaskModal = ({ isOpen, onClose, task_id = null }) => {
     }
 
   };
-
+  
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-60 duration-300 ${isModalOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}>
       <div className={`max-w-lg w-full p-4 bg-white dark:bg-neutral-800 rounded-xl shadow-lg transform transition-transform duration-300 ${isModalOpen ? "translate-y-0" : "-translate-y-20"}`}>
